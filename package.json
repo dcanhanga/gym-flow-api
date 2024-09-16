@@ -14,16 +14,22 @@
 		"biome": "biome check --write --no-errors-on-unmatched",
 		"prepare": "husky"
 	},
-	"keywords": ["Api rest", "Solid", "typescript"],
+	"keywords": [
+		"Api rest",
+		"Solid",
+		"typescript"
+	],
 	"author": "Domingos Canhanga",
 	"license": "ISC",
 	"dependencies": {
 		"@prisma/client": "5.19.1",
+		"bcryptjs": "2.4.3",
 		"fastify": "4.28.1",
 		"zod": "3.23.8"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.1",
+		"@types/bcryptjs": "2.4.6",
 		"@types/lint-staged": "13.3.0",
 		"@types/node": "22.5.5",
 		"@types/supertest": "6.0.2",
