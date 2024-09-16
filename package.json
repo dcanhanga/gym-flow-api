@@ -1,0 +1,40 @@
+{
+	"name": "api-solid-node",
+	"version": "1.0.0",
+	"description": "GyPass style app",
+	"main": "build/server.js",
+	"engines": {
+		"node": ">=20"
+	},
+	"scripts": {
+		"docker:up": "docker compose up -d",
+		"start:dev": "npm run docker:up && tsx watch --env-file .env --inspect src/server.ts",
+		"start": "node --env-file .env build/server.js",
+		"build": "tsup src --out-dir build",
+		"biome": "biome check --write --no-errors-on-unmatched",
+		"prepare": "husky"
+	},
+	"keywords": ["Api rest", "Solid", "typescript"],
+	"author": "Domingos Canhanga",
+	"license": "ISC",
+	"dependencies": {
+		"@prisma/client": "5.19.1",
+		"fastify": "4.28.1",
+		"zod": "3.23.8"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "1.9.1",
+		"@types/lint-staged": "13.3.0",
+		"@types/node": "22.5.5",
+		"@types/supertest": "6.0.2",
+		"git-commit-msg-linter": "5.0.8",
+		"husky": "9.1.6",
+		"lint-staged": "15.2.10",
+		"prisma": "5.19.1",
+		"supertest": "7.0.0",
+		"tsup": "8.2.4",
+		"tsx": "4.19.1",
+		"typescript": "5.6.2",
+		"vitest": "2.1.1"
+	}
+}
