@@ -12,14 +12,14 @@ describe('Register Use Case', () => {
 		await registerUseCase.execute({
 			email,
 			name: 'John Doe',
-			password: '12345',
+			password: '123456',
 		});
 
 		await expect(() =>
 			registerUseCase.execute({
 				email,
 				name: 'John Doe',
-				password: '12345',
+				password: '123456',
 			}),
 		).rejects.toBeInstanceOf(UserAlreadyExists);
 	});
