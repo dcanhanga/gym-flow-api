@@ -14,7 +14,7 @@
 		"biome": "biome check --write --no-errors-on-unmatched",
 		"prepare": "husky",
 		"test": "vitest run",
-		"test:run": "vitest",
+		"test:watch": "vitest",
 		"test:staged": "vitest run -- --findRelatedTests"
 	},
 	"keywords": ["Api rest", "Solid", "typescript"],
