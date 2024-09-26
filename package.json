@@ -15,7 +15,8 @@
 		"prepare": "husky",
 		"test": "vitest run",
 		"test:watch": "vitest",
-		"test:coverage": "vitest run --coverage"
+		"test:coverage": "vitest run --coverage",
+		"test:ui": "vitest --ui"
 	},
 	"keywords": ["Api rest", "Solid", "typescript"],
 	"author": "Domingos Canhanga",
@@ -34,6 +35,7 @@
 		"@types/node": "22.5.5",
 		"@types/supertest": "6.0.2",
 		"@vitest/coverage-v8": "2.1.1",
+		"@vitest/ui": "2.1.1",
 		"git-commit-msg-linter": "5.0.8",
 		"husky": "9.1.6",
 		"lint-staged": "15.2.10",

@@ -1,5 +1,5 @@
-import { UserAlreadyExists } from '@/errors/user-already-exists-error';
 import { InMemoryUserRepository } from '@/repositories/in-memory/prisma-users.repository';
+import { UserAlreadyExistsError } from '@/use-cases/errors/user-already-exists-error';
 import { compare } from 'bcryptjs';
 import { describe, expect, it } from 'vitest';
 import { RegisterUseCase } from './register';
@@ -21,7 +21,7 @@ describe('Register Use Case', () => {
 				name: 'John Doe',
 				password: '123456',
 			}),
-		).rejects.toBeInstanceOf(UserAlreadyExists);
+		).rejects.toBeInstanceOf(UserAlreadyExistsError);
 	});
 	it('should be hashed password upon registration', async () => {
 		const userRepository = new InMemoryUserRepository();
