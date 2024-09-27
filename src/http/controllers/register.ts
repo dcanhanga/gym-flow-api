@@ -3,6 +3,7 @@ import z from 'zod';
 
 import { PrismaUserRepository } from '@/repositories/prisma/prisma-users.repository';
 import { UserAlreadyExistsError } from '@/use-cases/errors/user-already-exists-error';
+import { registerUseCase } from '@/use-cases/factories/make-register-use-case';
 import { RegisterUseCase } from '@/use-cases/register';
 
 export async function register(request: FastifyRequest, reply: FastifyReply) {
@@ -12,7 +13,7 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
 		password: z.string(),
 	});
 	const { email, name, password } = requestBodySchema.parse(request.body);
-	const registerUseCase = new RegisterUseCase(new PrismaUserRepository());
+
 	try {
 		await registerUseCase.execute({ email, name, password });
 		reply.status(201).send();

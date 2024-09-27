@@ -5,7 +5,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { InMemoryUserRepository } from '@/repositories/in-memory/prisma-users.repository';
 
 import type { UserRepository } from '@/repositories/users-repository';
-import { AuthenticatedUseCase } from './authenticated';
+import { AuthenticatedUseCase } from './authenticate';
 import { InvalidCredentialsError } from './errors/invalid-credentials-error';
 
 describe('Authenticated UseCase', () => {

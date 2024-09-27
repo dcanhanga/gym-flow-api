@@ -18,11 +18,7 @@
 		"test:coverage": "vitest run --coverage",
 		"test:ui": "vitest --ui"
 	},
-	"keywords": [
-		"Api rest",
-		"Solid",
-		"typescript"
-	],
+	"keywords": ["Api rest", "Solid", "typescript"],
 	"author": "Domingos Canhanga",
 	"license": "ISC",
 	"dependencies": {
