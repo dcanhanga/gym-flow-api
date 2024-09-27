@@ -1,49 +1,47 @@
-import { InMemoryUserRepository } from '@/repositories/in-memory/prisma-users.repository';
-import { UserAlreadyExistsError } from '@/use-cases/errors/user-already-exists-error';
+import { faker } from '@faker-js/faker';
 import { compare } from 'bcryptjs';
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
+
+import { InMemoryUserRepository } from '@/repositories/in-memory/prisma-users.repository';
+import type { UserRepository } from '@/repositories/users-repository';
+import { UserAlreadyExistsError } from '@/use-cases/errors/user-already-exists-error';
 import { RegisterUseCase } from './register';
 
 describe('Register Use Case', () => {
-	it('should be not able register with same email twice', async () => {
-		const userRepository = new InMemoryUserRepository();
-		const registerUseCase = new RegisterUseCase(userRepository);
-		const email = 'jhondoe@gmail.com';
-		await registerUseCase.execute({
-			email,
-			name: 'John Doe',
-			password: '123456',
-		});
-
-		await expect(() =>
-			registerUseCase.execute({
-				email,
-				name: 'John Doe',
-				password: '123456',
-			}),
-		).rejects.toBeInstanceOf(UserAlreadyExistsError);
+	const userInputData = () => ({
+		email: faker.internet.email(),
+		name: faker.internet.userName(),
+		password: faker.internet.password(),
 	});
-	it('should be hashed password upon registration', async () => {
-		const userRepository = new InMemoryUserRepository();
-		const registerUseCase = new RegisterUseCase(userRepository);
-		const email = 'jhondoe@gmail.com';
-		const { user } = await registerUseCase.execute({
+	let sut: RegisterUseCase;
+	let userRepository: UserRepository;
+	beforeEach(() => {
+		userRepository = new InMemoryUserRepository();
+		sut = new RegisterUseCase(userRepository);
+	});
+	it('should not be possible to register with the same email twice', async () => {
+		const data = userInputData();
+		await sut.execute(data);
+
+		await expect(() => sut.execute(data)).rejects.toBeInstanceOf(
+			UserAlreadyExistsError,
+		);
+	});
+	it('must register user with hashed password', async () => {
+		const { email, name, password } = userInputData();
+		const { user } = await sut.execute({
 			email,
-			name: 'John Doe',
-			password: '12345',
+			name,
+			password,
 		});
-		const isPasswordHashedCorrectly = await compare('12345', user.passwordHash);
+		const isPasswordHashedCorrectly = await compare(
+			password,
+			user.passwordHash,
+		);
 		expect(isPasswordHashedCorrectly).toBe(true);
 	});
 	it('should be able to register', async () => {
-		const userRepository = new InMemoryUserRepository();
-		const registerUseCase = new RegisterUseCase(userRepository);
-		const email = 'jhondoe@gmail.com';
-		const { user } = await registerUseCase.execute({
-			email,
-			name: 'John Doe',
-			password: '12345',
-		});
+		const { user } = await sut.execute(userInputData());
 		expect(user.id).toEqual(expect.any(String));
 	});
 });
