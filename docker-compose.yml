@@ -7,4 +7,4 @@ services:
    environment:
     - POSTGRES_USER=apiSolid
     - POSTGRES_PASSWORD=apiSolid
-    - POSTGRES_DB=ApiSolid
+    - POSTGRES_DB=apiSolid

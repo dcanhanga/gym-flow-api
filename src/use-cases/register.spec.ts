@@ -8,7 +8,12 @@ import { UserAlreadyExistsError } from '@/use-cases/errors/user-already-exists-e
 import { RegisterUseCase } from './register';
 
 describe('Register Use Case', () => {
-	const userInputData = () => ({
+	type UserFakeData = {
+		email: string;
+		name: string;
+		password: string;
+	};
+	const userInputData = (): UserFakeData => ({
 		email: faker.internet.email(),
 		name: faker.internet.userName(),
 		password: faker.internet.password(),
