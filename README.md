@@ -2,8 +2,8 @@
 GyPass style app.
 ## RFs (Requisitos funcionais)
 - [x] Deve ser possível se cadastrar;
-- [ ] Deve ser possível se autenticar;
-- [ ] Deve ser possível obter o perfil de um usuário logado;
+- [x] Deve ser possível se autenticar;
+- [x] Deve ser possível obter o perfil de um usuário logado;
 - [ ] Deve ser possível obter o numero de check-ins realizados pelo usuário logado;
 - [ ] Deve ser possível o usuário obter seu hatóricos de check-ins;
 - [ ] Deve ser possível o usuário buscar academias próximas;
@@ -20,6 +20,6 @@ GyPass style app.
 - [ ] A academia só pode ser cadastrada por administradores;
 ## RNFs (Requisitos nao-funcionais)
 - [x] A senha do usuário precisa estar criptografada;
-- [ ] Os dados da aplicação precisar estar persistidos em um banco de PostgreSQL;
+- [x] Os dados da aplicação precisar estar persistidos em um banco de PostgreSQL;
 - [ ] Todas listas de dados precisam estar paginadas por 20 items por pagina;
 - [ ] O usuário deve ser identificado por um JWT (JSON WEB TOKEN)

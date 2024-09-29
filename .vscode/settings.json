@@ -2,5 +2,5 @@
 	"[prisma]": {
 		"editor.formatOnSave": true
 	},
-	"cSpell.words": ["fastify"]
+	"cSpell.words": ["dayjs", "fastify"]
 }
