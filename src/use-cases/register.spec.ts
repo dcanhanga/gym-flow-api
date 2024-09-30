@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker';
 import { compare } from 'bcryptjs';
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { InMemoryUserRepository } from '@/repositories/in-memory/prisma-users.repository';
+import { InMemoryUserRepository } from '@/repositories/in-memory/in-memory-users.repository';
 import type { UserRepository } from '@/repositories/users-repository';
 import { UserAlreadyExistsError } from '@/use-cases/errors/user-already-exists-error';
 import { RegisterUseCase } from './register';
