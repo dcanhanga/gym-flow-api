@@ -1,6 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import type { Gym, Prisma } from '@prisma/client';
-import { Decimal } from '@prisma/client/runtime/library';
+import { type Gym, Prisma } from '@prisma/client';
 import type { GymRepository } from '../gyms-repository';
 
 export class InMemoryGyRepository implements GymRepository {
@@ -12,10 +11,8 @@ export class InMemoryGyRepository implements GymRepository {
 			title,
 			phone,
 			description: description ? description : null,
-			latitude:
-				typeof latitude === 'number' ? new Decimal(latitude) : new Decimal(0),
-			longitude:
-				typeof longitude === 'number' ? new Decimal(longitude) : new Decimal(0),
+			latitude: new Prisma.Decimal(latitude.toString()),
+			longitude: new Prisma.Decimal(longitude.toString()),
 		};
 		this.items.push(gym);
 		return gym;
