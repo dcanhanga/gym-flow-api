@@ -1,11 +1,9 @@
 import { randomUUID } from 'node:crypto';
 import type { CheckInRepository } from '@/repositories/check-in-repository';
-
 import { InMemoryInCheckInRepository } from '@/repositories/in-memory/in-memory-check-in-repository';
+import { beforeEach, describe, expect, it } from 'vitest';
 
-import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-
-import { FetchUserCheckInsUseCase } from './fecth-user-check-ins-history';
+import { FetchUserCheckInsUseCase } from './fetch-user-check-ins-history';
 
 describe('Fetch user check-ins history', () => {
 	type CheckInFakeData = {
