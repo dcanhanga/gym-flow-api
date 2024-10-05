@@ -9,13 +9,13 @@ GyPass style app.
 - [x] Deve ser possível o usuário buscar academias próximas;
 - [ ] Deve ser possível o usuário buscar academias pelo nome;
 - [x] Deve ser possível o usuário realizar check-in em uma academia;
-- [ ] Deve ser possível validar o check-in do usuário;
+- [x] Deve ser possível validar o check-in do usuário;
 - [x] Deve ser possível cadastrar uma academia;
 ## RNs (Regras de negócios)
 - [x] O usuário nao deve se cadastrar com um e-mail duplicado;
 - [x] O usuário nao pode fazer 2 check-ins no mesmo dia;
 - [x] O usuário nao pode fazer check-in se nao estiver perto de (100m) da academia;
-- [ ] O check-in só podes er validado até 2o minutos após criado;
+- [ ] O check-in só podes ser validado até 20 minutos após criado;
 - [ ] O check-in só pode ser validado por administradores;
 - [ ] A academia só pode ser cadastrada por administradores;
 ## RNFs (Requisitos nao-funcionais)
