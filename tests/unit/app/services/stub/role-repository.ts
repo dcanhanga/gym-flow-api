@@ -1,6 +1,3 @@
-import { randomUUID } from 'node:crypto';
-import { faker } from '@faker-js/faker';
-
 import type { Role } from '@/domain/entities/role';
 import type { RoleRepository } from '@/domain/repositories/role';
 

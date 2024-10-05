@@ -1,5 +1,4 @@
 export interface AccountRole {
 	id: string;
-	accountId: string;
-	roleId: string;
+	name: 'user' | 'admin' | 'super';
 }

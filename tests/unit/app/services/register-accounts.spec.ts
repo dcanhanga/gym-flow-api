@@ -1,4 +1,3 @@
-import { randomUUID } from 'node:crypto';
 import { faker } from '@faker-js/faker';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -8,8 +7,8 @@ import { ResourceAlreadyExists } from '@/domain/errors/resource-already-exists';
 import type { RegisterAccountRepository } from '@/domain/repositories/register-account';
 import type { RoleRepository } from '@/domain/repositories/role';
 import type { RegisterAccountUseCase } from '@/domain/use-cases/register-account';
-
-import { RegisterAccountRepositoryStub } from './stub/register-account-repository';
+import { generateAccountToRegister } from '@/tests/utils/generate-account-to-register';
+import { InMemoryRegisterAccountRepository } from '../../in-memory-repository/register-account-repository';
 import { RoleRepositoryStub } from './stub/role-repository';
 
 describe('RegisterAccountService', () => {
@@ -18,7 +17,7 @@ describe('RegisterAccountService', () => {
 	let sut: RegisterAccountService;
 
 	beforeEach(() => {
-		registerAccountRepository = new RegisterAccountRepositoryStub();
+		registerAccountRepository = new InMemoryRegisterAccountRepository();
 
 		roleRepository = new RoleRepositoryStub();
 
@@ -29,21 +28,11 @@ describe('RegisterAccountService', () => {
 	});
 
 	it('deve lançar ResourceAlreadyExists quando um usuário com o mesmo e-mail já estiver cadastrado', async () => {
-		const accountAlreadyExits = {
-			id: randomUUID(),
-			email: faker.internet.email(),
-			name: faker.internet.userName(),
-			password: faker.internet.password(),
-			avatarUrl: faker.image.avatar(),
-			role: 'user',
-		};
-
-		vi.spyOn(registerAccountRepository, 'findByEmail').mockResolvedValueOnce({
-			...accountAlreadyExits,
-		});
+		const account = generateAccountToRegister('user');
+		registerAccountRepository.register(account);
 
 		const newAccount: RegisterAccountUseCase.Params = {
-			email: accountAlreadyExits.email,
+			email: account.email,
 			name: faker.internet.userName(),
 			password: faker.internet.password(),
 			role: 'user',
