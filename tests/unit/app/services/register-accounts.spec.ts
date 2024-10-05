@@ -1,27 +1,25 @@
-import { faker } from '@faker-js/faker';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import type { BcryptService } from '@/app/services/protocols/bcrypt';
 import { RegisterAccountService } from '@/app/services/register-account';
-
 import { ResourceAlreadyExists } from '@/domain/errors/resource-already-exists';
 import type { RegisterAccountRepository } from '@/domain/repositories/register-account';
-import type { RoleRepository } from '@/domain/repositories/role';
-import type { RegisterAccountUseCase } from '@/domain/use-cases/register-account';
+
 import { generateAccountToRegister } from '@/tests/utils/generate-account-to-register';
 import { InMemoryRegisterAccountRepository } from '../../in-memory-repository/register-account-repository';
-import { RoleRepositoryStub } from './stub/role-repository';
+import { BcryptServiceStub } from './stub/bcrypt-service';
 
 describe('RegisterAccountService', () => {
 	let registerAccountRepository: RegisterAccountRepository;
-	let roleRepository: RoleRepository;
+
+	let bcryptService: BcryptService;
 	let sut: RegisterAccountService;
 
 	beforeEach(() => {
 		registerAccountRepository = new InMemoryRegisterAccountRepository();
 
-		roleRepository = new RoleRepositoryStub();
-
-		sut = new RegisterAccountService(registerAccountRepository, roleRepository);
+		bcryptService = new BcryptServiceStub();
+		sut = new RegisterAccountService(registerAccountRepository, bcryptService);
 	});
 	afterEach(() => {
 		vi.clearAllMocks();
@@ -31,15 +29,18 @@ describe('RegisterAccountService', () => {
 		const account = generateAccountToRegister('user');
 		registerAccountRepository.register(account);
 
-		const newAccount: RegisterAccountUseCase.Params = {
-			email: account.email,
-			name: faker.internet.userName(),
-			password: faker.internet.password(),
-			role: 'user',
-		};
-
-		await expect(sut.register(newAccount)).rejects.toBeInstanceOf(
+		await expect(sut.register(account)).rejects.toBeInstanceOf(
 			ResourceAlreadyExists,
 		);
+	});
+	it('deve fazer o hash da senha', async () => {
+		const account = generateAccountToRegister('user');
+
+		const bcryptServiceSpy = vi
+			.spyOn(bcryptService, 'hash')
+			.mockResolvedValue('hashedPassword');
+		await sut.register(account);
+		expect(bcryptServiceSpy).toHaveBeenCalledWith(account.password);
+		expect(bcryptServiceSpy).toHaveBeenCalledTimes(1);
 	});
 });
