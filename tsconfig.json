@@ -12,9 +12,11 @@
 		"esModuleInterop": true,
 		"skipLibCheck": true,
 		"moduleResolution": "node16",
-		"baseUrl": "./",
+		"rootDirs": ["src", "tests"],
+		"baseUrl": "src",
 		"paths": {
-			"@/*": ["./src/*"]
+			"@/tests/*": ["../tests/*"],
+			"@/*": ["*"]
 		}
 	}
 }
