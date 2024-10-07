@@ -1,12 +1,19 @@
 import type { Account } from '../entities/account';
-import type { RegisterAccountUseCase } from '../use-cases/register-account';
 
-export interface RegisterAccountRepository {
-	register(account: RegisterAccountUseCase.Params): Promise<Account>;
-	findByEmail(email: string): Promise<Account | null>;
-	assignRole(assignRole: RegisterAccountRepository.AssignRole): Promise<void>;
+interface RegisterAccountRepository {
+	register(
+		account: RegisterAccountRepository.RegisterInput,
+	): Promise<RegisterAccountRepository.RegisterResponse>;
+	findByEmail(
+		email: string,
+	): Promise<RegisterAccountRepository.FindByEmailResponse>;
 }
 
-export namespace RegisterAccountRepository {
+namespace RegisterAccountRepository {
 	export type AssignRole = { userId: string; roleId: string };
+	export type RegisterResponse = Omit<Account, 'password'>;
+	export type RegisterInput = Omit<Account, 'id' | 'role' | 'avatarUrl'>;
+	export type FindByEmailResponse = Account | null;
 }
+
+export { RegisterAccountRepository };

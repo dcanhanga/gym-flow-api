@@ -1,4 +1,4 @@
 {
 	"*": ["biome check --write --no-errors-on-unmatched"],
-	"*.spec.ts, *.test.ts": ["npm run test"]
+	"*.spec.ts *.test.ts": ["npm run test"]
 }

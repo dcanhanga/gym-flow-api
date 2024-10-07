@@ -8,6 +8,7 @@
 	},
 	"scripts": {
 		"docker:up": "docker compose up -d",
+
 		"start:dev": "npm run docker:up && tsx watch --env-file .env --inspect src/server.ts",
 		"start": "node --env-file .env build/server.js",
 		"build": "tsup src --out-dir build",
@@ -23,7 +24,6 @@
 	"license": "ISC",
 	"dependencies": {
 		"@prisma/client": "5.20.0",
-
 		"bcryptjs": "2.4.3",
 		"dayjs": "1.11.13",
 		"fastify": "4.28.1",

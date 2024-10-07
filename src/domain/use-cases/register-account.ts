@@ -14,5 +14,5 @@ export namespace RegisterAccountUseCase {
 		role: 'user' | 'admin' | 'super';
 	};
 
-	export type Result = null;
+	export type Result = Omit<Account, 'password'>;
 }
