@@ -1,12 +1,18 @@
 import type { RegisterAccountUseCase } from '@/domain/use-cases/register-account';
 
-type Fields = RegisterAccountUseCase.Params;
-export interface RegisterAccountServiceValidator {
-	validate(data: Fields): ErrorResponse | null;
+interface RegisterAccountServiceValidator {
+	validate(
+		fields: RegisterAccountServiceValidator.Fields,
+	): RegisterAccountServiceValidator.ErrorResponse;
 }
 
-export type ErrorResponse = {
-	errors: {
-		[key in keyof Fields]?: string;
-	};
-};
+namespace RegisterAccountServiceValidator {
+	export type Fields = RegisterAccountUseCase.Params;
+	export type ErrorResponse = {
+		errors: {
+			[key in keyof Fields]?: string;
+		};
+	} | null;
+}
+
+export type { RegisterAccountServiceValidator };

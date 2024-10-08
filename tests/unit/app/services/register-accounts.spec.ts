@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { BcryptService } from '@/app/services/protocols/bcrypt';
@@ -10,10 +11,10 @@ import { errorMessage } from '@/domain/message/error-message';
 import type { RegisterAccountRepository } from '@/domain/repositories/register-account';
 import type { RoleRepository } from '@/domain/repositories/role-repository';
 import { generateAccountToRegister } from '@/tests/utils/generate-account-to-register';
-import { InMemoryRegisterAccountRepository } from '../../in-memory-repository/register-account-repository';
-import { InMemoryRoleRepository } from '../../in-memory-repository/role-repository';
-import { BcryptServiceStub } from './stub/bcrypt-service';
-import { RegisterAccountValidatorStub } from './stub/register-account-validator';
+import { StubBcryptService } from '../stub/bcrypt-service';
+import { StubRegisterAccountRepository } from '../stub/register-account-repository';
+import { StubRegisterAccountValidator } from '../stub/register-account-validator';
+import { StubRoleRepository } from '../stub/role-repository';
 
 describe('RegisterAccountService', () => {
 	let registerAccountRepository: RegisterAccountRepository;
@@ -23,10 +24,10 @@ describe('RegisterAccountService', () => {
 	let sut: RegisterAccountService;
 
 	beforeEach(() => {
-		registerAccountRepository = new InMemoryRegisterAccountRepository();
-		roleRepository = new InMemoryRoleRepository();
-		bcryptService = new BcryptServiceStub();
-		registerAccountServiceValidator = new RegisterAccountValidatorStub();
+		registerAccountRepository = new StubRegisterAccountRepository();
+		roleRepository = new StubRoleRepository();
+		bcryptService = new StubBcryptService();
+		registerAccountServiceValidator = new StubRegisterAccountValidator();
 		sut = new RegisterAccountService(
 			registerAccountRepository,
 			roleRepository,
@@ -39,50 +40,48 @@ describe('RegisterAccountService', () => {
 	});
 	describe('Cenários de erro', () => {
 		it('deve lançar um erro ResourceAlreadyExists quando um usuário com o mesmo e-mail já está cadastrado', async () => {
-			const { id: roleId } = await roleRepository.addRole('user');
 			const account = generateAccountToRegister('user');
 
-			await registerAccountRepository.register({
+			const registerAccountRepositorySpy = vi.spyOn(
+				registerAccountRepository,
+				'findByEmail',
+			);
+
+			registerAccountRepositorySpy.mockResolvedValue({
+				id: randomUUID(),
 				email: account.email,
 				name: account.name,
 				password: account.password,
-				roleId,
+				roleId: randomUUID(),
+				avatarUrl: null,
 			});
 
-			let error: unknown;
+			const result = sut.register(account);
+			await expect(result).rejects.toEqual(
+				new ResourceAlreadyExists(errorMessage.EMAIL_ALREADY_EXISTS),
+			);
 
-			try {
-				await sut.register(account);
-			} catch (err) {
-				error = err;
-			}
-
-			expect(error).toBeInstanceOf(ResourceAlreadyExists);
-
-			if (error instanceof ResourceAlreadyExists) {
-				expect(error.message).toStrictEqual(errorMessage.EMAIL_ALREADY_EXISTS);
-			}
+			expect(registerAccountRepositorySpy).toHaveBeenCalledWith(account.email);
+			expect(registerAccountRepositorySpy).toHaveBeenCalledTimes(1);
 		});
 
 		it('deve lançar ResourceNotFound se o role fornecido não existir', async () => {
 			const account = generateAccountToRegister('user');
 
-			let error: unknown;
+			const roleRepositorySpy = vi.spyOn(roleRepository, 'findByName');
+			roleRepositorySpy.mockResolvedValue(null);
 
-			try {
-				await sut.register(account);
-			} catch (err) {
-				error = err;
-			}
+			const result = sut.register(account);
 
-			expect(error).toBeInstanceOf(ResourceNotFound);
-			if (error instanceof ResourceNotFound) {
-				expect(error.message).toStrictEqual(errorMessage.ROLE_NOT_FOUND);
-			}
+			await expect(result).rejects.toEqual(
+				new ResourceNotFound(errorMessage.ROLE_NOT_FOUND),
+			);
+
+			expect(roleRepositorySpy).toBeCalledWith(account.role);
+			expect(roleRepositorySpy).toBeCalledTimes(1);
 		});
 
 		it('deve lançar um erro se a validação falhar', async () => {
-			await roleRepository.addRole('user');
 			const account = generateAccountToRegister('user');
 
 			const mockValidationResult = {
@@ -98,51 +97,39 @@ describe('RegisterAccountService', () => {
 				mockValidationResult,
 			);
 
-			let error: unknown;
+			const result = sut.register(account);
+			await expect(result).rejects.toEqual(
+				new InvalidParams(
+					errorMessage.INVALID_PARAMS,
+					mockValidationResult.errors,
+				),
+			);
 
-			try {
-				await sut.register(account);
-			} catch (err) {
-				error = err;
-			}
-			expect(error).toBeInstanceOf(InvalidParams);
-			if (error instanceof InvalidParams) {
-				expect(error.message).toStrictEqual(errorMessage.INVALID_PARAMS);
-				expect(error.errors).toStrictEqual(mockValidationResult.errors);
-			}
 			expect(registerAccountServiceValidator.validate).toBeCalledWith(account);
+			expect(registerAccountServiceValidator.validate).toHaveBeenCalledTimes(1);
 		});
 	});
 
 	describe('Cenários de sucesso', () => {
 		it('deve fazer o hash da senha quando uma conta é registrada com sucesso', async () => {
-			const { name } = await roleRepository.addRole('user');
 			const account = generateAccountToRegister('user');
 			const bcryptServiceSpy = vi.spyOn(bcryptService, 'hash');
 
-			await sut.register({
-				...account,
-				role: name,
-			});
-			const registeredAccount = await registerAccountRepository.findByEmail(
-				account.email,
-			);
+			bcryptServiceSpy.mockResolvedValueOnce('hashedPassword');
+
+			await sut.register(account);
 
 			expect(bcryptServiceSpy).toHaveBeenCalledWith(account.password);
 			expect(bcryptServiceSpy).toBeCalledTimes(1);
-			expect(registeredAccount?.password).toStrictEqual('hashedPassword');
 		});
 
 		it('deve registrar uma nova conta quando os dados forem válidos', async () => {
-			const { name } = await roleRepository.addRole('user');
 			const account = generateAccountToRegister('user');
-			const registeredAccount = await sut.register({
-				...account,
-				role: name,
-			});
+			const registeredAccount = await sut.register(account);
 
 			expect(registeredAccount).toHaveProperty('id');
-			expect(registeredAccount.email).toBe(account.email);
+			expect(registeredAccount.email).toStrictEqual(account.email);
+			expect(registeredAccount.name).toStrictEqual(account.name);
 		});
 	});
 });

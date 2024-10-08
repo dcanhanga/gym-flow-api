@@ -1,6 +1,6 @@
 import type { BcryptService } from '@/app/services/protocols/bcrypt';
 
-class BcryptServiceStub implements BcryptService {
+class StubBcryptService implements BcryptService {
 	hash(_plaintext: string): Promise<string> {
 		return Promise.resolve('hashedPassword');
 	}
@@ -8,4 +8,4 @@ class BcryptServiceStub implements BcryptService {
 		return Promise.resolve(true);
 	}
 }
-export { BcryptServiceStub };
+export { StubBcryptService };
