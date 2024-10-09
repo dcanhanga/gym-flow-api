@@ -1,7 +1,9 @@
 import { RegisterAccountService } from '@/app/services/register-account';
+import { ResourceAlreadyExists } from '@/domain/errors/resource-already-exists';
+import { errorMessage } from '@/domain/message/error-message';
 
 import type { RegisterAccountUseCase } from '@/domain/use-cases/register-account';
-import { BcryptJSService } from '@/infra/bcrpt';
+import { BcryptJSService } from '@/infra/bcrypt';
 import { ZodRegisterAccountValidator } from '@/infra/validators/zod-register-account-validator';
 import { InMemoryRegisterAccountRepository } from '@/tests/in-memory-repository/register-account-repository';
 import { InMemoryRoleRepository } from '@/tests/in-memory-repository/role-repository';
@@ -83,21 +85,21 @@ describe('Register Account Service - Integração', () => {
 
 		await sut.register(accountData);
 
-		await expect(sut.register(accountData)).rejects.toThrow(
-			'EMAIL_ALREADY_EXISTS',
+		await expect(sut.register(accountData)).rejects.toEqual(
+			new ResourceAlreadyExists(errorMessage.EMAIL_ALREADY_EXISTS),
 		);
 	});
 
-	// it('deve lançar erro de validação se os dados estiverem incorretos', async () => {
-	// 	const invalidAccountData: RegisterAccountUseCase.Params = {
-	// 		email: 'invalid-email',
-	// 		name: '',
-	// 		password: 'short',
-	// 		role: 'invalid-role',
-	// 	};
+	it('deve lançar erro de validação se os dados estiverem incorretos', async () => {
+		const invalidAccountData: RegisterAccountUseCase.Params = {
+			email: 'invalid-email',
+			name: '',
+			password: 'short',
+			role: 'user',
+		};
 
-	// 	await expect(sut.register(invalidAccountData)).rejects.toThrow(
-	// 		'INVALID_PARAMS',
-	// 	);
-	// });
+		await expect(sut.register(invalidAccountData)).rejects.toThrow(
+			errorMessage.INVALID_PARAMS,
+		);
+	});
 });

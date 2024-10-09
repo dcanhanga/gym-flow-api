@@ -4,10 +4,12 @@ import { validatorMessage } from '@/app/validator-message';
 import { z } from 'zod';
 
 const registerAccountSchema = z.object({
-	email: z.string({
-		required_error: validatorMessage.EMAIL_IS_REQUIRED,
-		invalid_type_error: validatorMessage.EMAIL_MUST_BE_A_STRING,
-	}),
+	email: z
+		.string({
+			required_error: validatorMessage.EMAIL_IS_REQUIRED,
+			invalid_type_error: validatorMessage.EMAIL_MUST_BE_A_STRING,
+		})
+		.email({ message: validatorMessage.INVALID_EMAIL }),
 	name: z.string({
 		required_error: validatorMessage.NAME_IS_REQUIRED,
 		invalid_type_error: validatorMessage.NAME_MUST_BE_A_STRING,
