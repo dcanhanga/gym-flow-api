@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { validatorMessage } from '@/app/validator-message';
-import { ZodRegisterAccountValidator } from '@/infra/validators/zod/zod-register-account-validator';
+import { validatorMessage } from '@/application/validator-message';
+import { ZodRegisterAccountValidator } from '@/infrastructure/validators/zod/zod-register-account-validator';
 
 describe('ZodRegisterAccountValidator', () => {
 	let validator: ZodRegisterAccountValidator;

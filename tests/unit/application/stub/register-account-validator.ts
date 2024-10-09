@@ -1,4 +1,4 @@
-import type { RegisterAccountServiceValidator } from '@/app/services/protocols/register-account-service-validator';
+import type { RegisterAccountServiceValidator } from '@/application/services/protocols/register-account-service-validator';
 
 class StubRegisterAccountValidator implements RegisterAccountServiceValidator {
 	validate(

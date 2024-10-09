@@ -1,6 +1,6 @@
 import { type ZodIssue, z } from 'zod';
 
-import type { RegisterAccountServiceValidator } from '@/app/services/protocols/register-account-service-validator';
+import type { RegisterAccountServiceValidator } from '@/application/services/protocols/register-account-service-validator';
 import {
 	emailValidator,
 	nameValidator,

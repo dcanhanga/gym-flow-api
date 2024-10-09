@@ -2,8 +2,8 @@ import {
 	leastOneNumber,
 	leastOneSpecialCharacter,
 	leastOneUppercase,
-} from '@/app/utils/regex';
-import { validatorMessage } from '@/app/validator-message';
+} from '@/application/utils/regex';
+import { validatorMessage } from '@/application/validator-message';
 import z from 'zod';
 
 function emailValidator() {

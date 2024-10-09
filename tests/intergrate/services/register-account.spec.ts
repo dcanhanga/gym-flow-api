@@ -1,10 +1,10 @@
-import { RegisterAccountService } from '@/app/services/register-account';
+import { RegisterAccountService } from '@/application/services/register-account';
 import { ResourceAlreadyExists } from '@/domain/errors/resource-already-exists';
 import { errorMessage } from '@/domain/message/error-message';
 
 import type { RegisterAccountUseCase } from '@/domain/use-cases/register-account';
-import { BcryptJSService } from '@/infra/bcrypt';
-import { ZodRegisterAccountValidator } from '@/infra/validators/zod/zod-register-account-validator';
+import { BcryptJSService } from '@/infrastructure/bcrypt';
+import { ZodRegisterAccountValidator } from '@/infrastructure/validators/zod/zod-register-account-validator';
 import { InMemoryRegisterAccountRepository } from '@/tests/in-memory-repository/register-account-repository';
 import { InMemoryRoleRepository } from '@/tests/in-memory-repository/role-repository';
 import { beforeEach, describe, expect, it } from 'vitest';

@@ -1,9 +1,9 @@
 import { randomUUID } from 'node:crypto';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import type { BcryptService } from '@/app/services/protocols/bcrypt';
-import type { RegisterAccountServiceValidator } from '@/app/services/protocols/register-account-service-validator';
-import { RegisterAccountService } from '@/app/services/register-account';
+import type { BcryptService } from '@/application/services/protocols/bcrypt';
+import type { RegisterAccountServiceValidator } from '@/application/services/protocols/register-account-service-validator';
+import { RegisterAccountService } from '@/application/services/register-account';
 import { InvalidParams } from '@/domain/errors/invalid-params';
 import { ResourceAlreadyExists } from '@/domain/errors/resource-already-exists';
 import { ResourceNotFound } from '@/domain/errors/resource-not-found';

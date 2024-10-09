@@ -1,4 +1,4 @@
-import type { BcryptService } from '@/app/services/protocols/bcrypt';
+import type { BcryptService } from '@/application/services/protocols/bcrypt';
 
 class StubBcryptService implements BcryptService {
 	hash(_plaintext: string): Promise<string> {

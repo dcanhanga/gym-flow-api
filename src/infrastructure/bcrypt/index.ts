@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 
-import type { BcryptService } from '@/app/services/protocols/bcrypt';
+import type { BcryptService } from '@/application/services/protocols/bcrypt';
 
 class BcryptJSService implements BcryptService {
 	private salt: number;
