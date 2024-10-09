@@ -4,7 +4,7 @@ import { errorMessage } from '@/domain/message/error-message';
 
 import type { RegisterAccountUseCase } from '@/domain/use-cases/register-account';
 import { BcryptJSService } from '@/infra/bcrypt';
-import { ZodRegisterAccountValidator } from '@/infra/validators/zod-register-account-validator';
+import { ZodRegisterAccountValidator } from '@/infra/validators/zod/zod-register-account-validator';
 import { InMemoryRegisterAccountRepository } from '@/tests/in-memory-repository/register-account-repository';
 import { InMemoryRoleRepository } from '@/tests/in-memory-repository/role-repository';
 import { beforeEach, describe, expect, it } from 'vitest';
@@ -36,7 +36,7 @@ describe('Register Account Service - Integração', () => {
 		const accountData: RegisterAccountUseCase.Params = {
 			email: 'test@example.com',
 			name: 'Test User',
-			password: 'password123',
+			password: 'passworD@123',
 			role: 'user',
 		};
 
@@ -58,7 +58,7 @@ describe('Register Account Service - Integração', () => {
 		const accountData: RegisterAccountUseCase.Params = {
 			email: 'test@example.com',
 			name: 'Test User',
-			password: 'password123',
+			password: 'passworD@123',
 			role: 'user',
 		};
 
@@ -79,7 +79,7 @@ describe('Register Account Service - Integração', () => {
 		const accountData: RegisterAccountUseCase.Params = {
 			email: 'test@example.com',
 			name: 'Test User',
-			password: 'password123',
+			password: 'passworD@123',
 			role: 'user',
 		};
 
