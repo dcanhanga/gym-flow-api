@@ -1,3 +1,4 @@
+import { errorMessage } from '@/application/message/error-message';
 import type { ApiResponse, Errors, MetaData } from './interface/api-response';
 type BuildResponse<T> = {
 	statusCode: number;
@@ -15,14 +16,14 @@ class HttpResponse {
 			statusCode: 400,
 			data: null,
 			errors,
-			message: 'Invalid parameters provided.',
+			message: errorMessage.INVALID_PARAMS,
 		});
 	}
 	public static serverError(): ApiResponse<null> {
 		return HttpResponse.buildResponse({
 			statusCode: 500,
 			data: null,
-			message: 'INTERNAL_SERVER_ERROR',
+			message: errorMessage.INTERNAL_SERVER_ERROR,
 		});
 	}
 	public static created<T>(data: T): ApiResponse<T> {
@@ -37,11 +38,11 @@ class HttpResponse {
 			data,
 		});
 	}
-	public static notFound(): ApiResponse<null> {
+	public static notFound(message?: string): ApiResponse<null> {
 		return HttpResponse.buildResponse({
 			statusCode: 404,
 			data: null,
-			message: 'NOT_FOUND',
+			message: message ?? errorMessage.NOT_FOUND,
 		});
 	}
 	public static unauthorized(): ApiResponse<null> {

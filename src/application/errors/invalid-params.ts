@@ -1,8 +1,7 @@
-type KeyValue = Record<string, string>;
 
 class InvalidParams extends Error {
-	errors: KeyValue;
-	constructor(message: string, errors: KeyValue) {
+	errors: Record<string, string>;
+	constructor(message: string, errors: Record<string, string>) {
 		super(message);
 		this.name = 'InvalidParams';
 		this.errors = errors;

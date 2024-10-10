@@ -11,33 +11,35 @@ import { RegisterAccountUseCase } from '@/application/use-cases/register-account
 import type { RegisterAccountRepository } from '@/domain/repositories/register-account';
 import type { RoleRepository } from '@/domain/repositories/role-repository';
 import { generateAccountToRegister } from '@/tests/utils/generate-account-to-register';
-import { StubBcryptService } from '../services/bcrypt-service';
-import { StubRegisterAccountRepository } from '../services/register-account-repository';
-import { StubRegisterAccountValidator } from '../services/register-account-validator';
-import { StubRoleRepository } from '../services/role-repository';
+import { StubBcryptService } from '../stub/bcrypt-service';
+import { StubRegisterAccountRepository } from '../stub/register-account-repository';
+import { StubRegisterAccountValidator } from '../stub/register-account-validator';
+import { StubRoleRepository } from '../stub/role-repository';
 
 describe('RegisterAccountService', () => {
 	let registerAccountRepository: RegisterAccountRepository;
 	let roleRepository: RoleRepository;
 	let bcryptService: Bcrypt;
 	let registerAccountServiceValidator: RegisterAccountValidator;
-	let sut: RegisterAccountUseCase;
+	let registerAccountService: RegisterAccountUseCase;
 
 	beforeEach(() => {
 		registerAccountRepository = new StubRegisterAccountRepository();
 		roleRepository = new StubRoleRepository();
 		bcryptService = new StubBcryptService();
 		registerAccountServiceValidator = new StubRegisterAccountValidator();
-		sut = new RegisterAccountUseCase(
+		registerAccountService = new RegisterAccountUseCase(
 			registerAccountRepository,
 			roleRepository,
 			bcryptService,
 			registerAccountServiceValidator,
 		);
 	});
+
 	afterEach(() => {
 		vi.clearAllMocks();
 	});
+
 	describe('Cenários de erro', () => {
 		it('deve lançar um erro ResourceAlreadyExists quando um usuário com o mesmo e-mail já está cadastrado', async () => {
 			const account = generateAccountToRegister('user');
@@ -59,7 +61,7 @@ describe('RegisterAccountService', () => {
 				avatarUrl: null,
 			});
 
-			const result = sut.register(account);
+			const result = registerAccountService.register(account);
 
 			await expect(result).rejects.toEqual(resourceAlreadyExists);
 			expect(registerAccountRepositorySpy).toHaveBeenCalledWith(account.email);
@@ -75,7 +77,7 @@ describe('RegisterAccountService', () => {
 
 			roleRepositorySpy.mockResolvedValue(null);
 
-			const result = sut.register(account);
+			const result = registerAccountService.register(account);
 
 			await expect(result).rejects.toEqual(resourceNotFound);
 			expect(roleRepositorySpy).toBeCalledWith(account.role);
@@ -101,9 +103,13 @@ describe('RegisterAccountService', () => {
 				mockValidationResult,
 			);
 
-			const result = sut.register(account);
+			const result = registerAccountService.register(account);
 
 			await expect(result).rejects.toEqual(invalidParams);
+			await expect(result).rejects.toMatchObject({
+				message: errorMessage.INVALID_PARAMS,
+				errors: mockValidationResult.errors,
+			});
 			expect(registerAccountServiceValidator.validate).toBeCalledWith(account);
 			expect(registerAccountServiceValidator.validate).toHaveBeenCalledTimes(1);
 		});
@@ -116,19 +122,51 @@ describe('RegisterAccountService', () => {
 
 			bcryptServiceSpy.mockResolvedValueOnce('hashedPassword');
 
-			await sut.register(account);
+			await registerAccountService.register(account);
 
 			expect(bcryptServiceSpy).toHaveBeenCalledWith(account.password);
 			expect(bcryptServiceSpy).toBeCalledTimes(1);
 		});
 
+		it('deve armazenar a senha criptografada corretamente no repositório', async () => {
+			const account = generateAccountToRegister('user');
+			const bcryptServiceSpy = vi
+				.spyOn(bcryptService, 'hash')
+				.mockResolvedValueOnce('hashedPassword');
+			const registerAccountRepositorySpy = vi.spyOn(
+				registerAccountRepository,
+				'register',
+			);
+
+			await registerAccountService.register(account);
+
+			expect(bcryptServiceSpy).toHaveBeenCalledWith(account.password);
+			expect(bcryptServiceSpy).toBeCalledTimes(1);
+			expect(registerAccountRepositorySpy).toHaveBeenCalledWith(
+				expect.objectContaining({
+					password: 'hashedPassword',
+				}),
+			);
+		});
+
 		it('deve registrar uma nova conta quando os dados forem válidos', async () => {
 			const account = generateAccountToRegister('user');
-			const registeredAccount = await sut.register(account);
+			const registerAccountRepositorySpy = vi.spyOn(
+				registerAccountRepository,
+				'register',
+			);
 
+			const registeredAccount = await registerAccountService.register(account);
+
+			expect(registerAccountRepositorySpy).toHaveBeenCalledWith(
+				expect.objectContaining({
+					email: account.email,
+					name: account.name,
+					password: 'hashedPassword',
+					roleId: expect.any(String),
+				}),
+			);
 			expect(registeredAccount).toHaveProperty('id');
-			expect(registeredAccount.email).toStrictEqual(account.email);
-			expect(registeredAccount.name).toStrictEqual(account.name);
 		});
 	});
 });

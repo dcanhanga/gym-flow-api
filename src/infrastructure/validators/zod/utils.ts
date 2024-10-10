@@ -1,10 +1,11 @@
 import { errorMessage } from '@/application/message/error-message';
+import type { ErrorResponse } from '@/application/services/interfaces/error-response';
 import {
 	leastOneNumber,
 	leastOneSpecialCharacter,
 	leastOneUppercase,
 } from '@/application/utils/regex';
-import z from 'zod';
+import z, { type ZodIssue } from 'zod';
 
 function emailValidator() {
 	return z
@@ -21,12 +22,9 @@ function nameValidator() {
 	});
 }
 function roleValidator() {
-	return z
-		.enum(['user', 'super', 'admin'], {
-			invalid_type_error: errorMessage.INVALID_ROLE,
-			message: errorMessage.INVALID_ROLE,
-		})
-		.default('user');
+	return z.enum(['user', 'super', 'admin'], {
+		message: errorMessage.ROLE_MUST_BE_USER_OR_ADMIN_OR_SUPER,
+	});
 }
 function passwordValidator() {
 	return z
@@ -48,5 +46,25 @@ function passwordValidator() {
 			message: errorMessage.PASSWORD_MUST_HAVE_AT_LEAST_ONE_SPECIAL_LETTER,
 		});
 }
+function formatErrorResponse(issues: ZodIssue[]): ErrorResponse {
+	const response: ErrorResponse = {
+		errors: {},
+	};
 
-export { emailValidator, nameValidator, passwordValidator, roleValidator };
+	for (const issue of issues) {
+		if (issue.code === 'unrecognized_keys') {
+			response.errors[issue.keys[0]] = issue.message;
+		} else {
+			response.errors[issue.path[0]] = issue.message;
+		}
+	}
+
+	return response;
+}
+export {
+	emailValidator,
+	nameValidator,
+	passwordValidator,
+	roleValidator,
+	formatErrorResponse,
+};

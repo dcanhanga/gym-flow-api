@@ -1,5 +1,6 @@
 import { InvalidParams } from '@/application/errors/invalid-params';
 import { ResourceAlreadyExists } from '@/application/errors/resource-already-exists';
+import { ResourceNotFound } from '@/application/errors/resource-not-found';
 import type {
 	RegisterAccount,
 	RegisterAccountParams,
@@ -22,7 +23,7 @@ class RegisterAccountController
 		try {
 			await this.registerAccountService.register(request);
 
-			return HttpResponse.noContent();
+			return HttpResponse.created(null);
 		} catch (error) {
 			console.log(error);
 			if (error instanceof InvalidParams) {
@@ -30,6 +31,9 @@ class RegisterAccountController
 			}
 			if (error instanceof ResourceAlreadyExists) {
 				return HttpResponse.conflict(error.message);
+			}
+			if (error instanceof ResourceNotFound) {
+				return HttpResponse.notFound(error.message);
 			}
 			return HttpResponse.serverError();
 		}

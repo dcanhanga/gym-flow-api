@@ -72,7 +72,7 @@ describe('ZodRegisterAccountValidatorService', () => {
 			});
 		});
 		describe('role', () => {
-			it(`deve retornar erro "${errorMessage.INVALID_ROLE}" quando o campo "role" não é uma string`, () => {
+			it(`deve retornar erro "${errorMessage.ROLE_MUST_BE_USER_OR_ADMIN_OR_SUPER}" quando o campo "role" não é uma string`, () => {
 				fields = {
 					name: 'Luzia',
 					email: 'example@example.com',
@@ -84,7 +84,7 @@ describe('ZodRegisterAccountValidatorService', () => {
 
 				expect(result).toStrictEqual({
 					errors: {
-						role: errorMessage.INVALID_ROLE,
+						role: errorMessage.ROLE_MUST_BE_USER_OR_ADMIN_OR_SUPER,
 					},
 				});
 			});
