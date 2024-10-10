@@ -1,6 +1,10 @@
 import { type ZodIssue, z } from 'zod';
 
-import type { RegisterAccountServiceValidator } from '@/application/services/protocols/register-account-service-validator';
+import type {
+	RegisterAccountErrorResponse,
+	RegisterAccountFields,
+	RegisterAccountValidator,
+} from '@/application/services/interfaces/register-account-validator';
 import {
 	emailValidator,
 	nameValidator,
@@ -8,12 +12,10 @@ import {
 	roleValidator,
 } from './utils';
 
-export class ZodRegisterAccountValidator
-	implements RegisterAccountServiceValidator
+export class ZodRegisterAccountValidatorService
+	implements RegisterAccountValidator
 {
-	validate(
-		data: RegisterAccountServiceValidator.Fields,
-	): RegisterAccountServiceValidator.ErrorResponse {
+	validate(data: RegisterAccountFields): RegisterAccountErrorResponse {
 		const result = this.safeParse(data);
 		if (!result.success) {
 			return this.formatErrorResponse(result.error.issues);
@@ -21,7 +23,7 @@ export class ZodRegisterAccountValidator
 		return null;
 	}
 
-	private safeParse(data: RegisterAccountServiceValidator.Fields) {
+	private safeParse(data: RegisterAccountFields) {
 		const registerAccountSchema = z.object({
 			email: emailValidator(),
 			name: nameValidator(),
@@ -31,13 +33,12 @@ export class ZodRegisterAccountValidator
 		return registerAccountSchema.safeParse(data);
 	}
 	private formatErrorResponse(issues: ZodIssue[]) {
-		const response: RegisterAccountServiceValidator.ErrorResponse = {
+		const response: RegisterAccountErrorResponse = {
 			errors: {},
 		};
 		for (const issue of issues) {
-			response.errors[
-				issue.path[0] as keyof RegisterAccountServiceValidator.Fields
-			] = issue.message;
+			response.errors[issue.path[0] as keyof RegisterAccountFields] =
+				issue.message;
 		}
 		return response;
 	}

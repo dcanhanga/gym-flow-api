@@ -10,10 +10,13 @@ interface RoleRepository {
 
 namespace RoleRepository {
 	type ResponsePossibleNull = AccountRole | null;
-	export type RoleName = AccountRole['name'];
+	export type RoleName = AddRoleResponse['name'];
 	export type FindByNameResponse = ResponsePossibleNull;
 	export type FindByIdResponse = ResponsePossibleNull;
-	export type AddRoleResponse = AccountRole;
+	export type AddRoleResponse = {
+		id: string;
+		name: string;
+	};
 }
 
 export { RoleRepository };

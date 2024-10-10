@@ -1,7 +1,6 @@
 import { randomUUID } from 'node:crypto';
 
 import type { RegisterAccountRepository } from '@/domain/repositories/register-account';
-import { faker } from '@faker-js/faker';
 
 class StubRegisterAccountRepository implements RegisterAccountRepository {
 	async register(

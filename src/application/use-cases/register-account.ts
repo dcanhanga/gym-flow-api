@@ -1,26 +1,29 @@
-import { InvalidParams } from '@/domain/errors/invalid-params';
-import { ResourceAlreadyExists } from '@/domain/errors/resource-already-exists';
-import { ResourceNotFound } from '@/domain/errors/resource-not-found';
-import { errorMessage } from '@/domain/message/error-message';
 import type { RegisterAccountRepository } from '@/domain/repositories/register-account';
 import type { RoleRepository } from '@/domain/repositories/role-repository';
-import type { RegisterAccountUseCase } from '@/domain/use-cases/register-account';
-import type { BcryptService } from './protocols/bcrypt';
-import type { RegisterAccountServiceValidator } from './protocols/register-account-service-validator';
+import { InvalidParams } from '../errors/invalid-params';
+import { ResourceAlreadyExists } from '../errors/resource-already-exists';
+import { ResourceNotFound } from '../errors/resource-not-found';
+import { errorMessage } from '../message/error-message';
+import type { Bcrypt } from '../services/interfaces/bcrypt';
+import type { RegisterAccountValidator } from '../services/interfaces/register-account-validator';
+import type {
+	RegisterAccount,
+	RegisterAccountParams,
+	RegisterAccountResult,
+} from './interfaces/register-account';
 
-class RegisterAccountService implements RegisterAccountUseCase {
+class RegisterAccountUseCase implements RegisterAccount {
 	constructor(
 		private readonly registerAccountRepository: RegisterAccountRepository,
 		private readonly roleRepository: RoleRepository,
-		private readonly bcryptService: BcryptService,
-		private readonly registerAccountServiceValidator: RegisterAccountServiceValidator,
+		private readonly bcrypt: Bcrypt,
+		private readonly registerAccountValidator: RegisterAccountValidator,
 	) {}
 	async register(
-		params: RegisterAccountUseCase.Params,
-	): Promise<RegisterAccountUseCase.Result> {
+		params: RegisterAccountParams,
+	): Promise<RegisterAccountResult> {
 		const { email, password, name, role } = params;
-		const hasInvalidParams =
-			this.registerAccountServiceValidator.validate(params);
+		const hasInvalidParams = this.registerAccountValidator.validate(params);
 
 		if (hasInvalidParams) {
 			throw new InvalidParams(
@@ -41,7 +44,7 @@ class RegisterAccountService implements RegisterAccountUseCase {
 			throw new ResourceNotFound(errorMessage.ROLE_NOT_FOUND);
 		}
 
-		const passwordHashed = await this.bcryptService.hash(password);
+		const passwordHashed = await this.bcrypt.hash(password);
 		const account = await this.registerAccountRepository.register({
 			email,
 			name,
@@ -52,4 +55,5 @@ class RegisterAccountService implements RegisterAccountUseCase {
 		return account;
 	}
 }
-export { RegisterAccountService };
+
+export { RegisterAccountUseCase };

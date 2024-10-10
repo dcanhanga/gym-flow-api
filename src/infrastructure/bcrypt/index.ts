@@ -1,8 +1,8 @@
 import bcrypt from 'bcryptjs';
 
-import type { BcryptService } from '@/application/services/protocols/bcrypt';
+import type { Bcrypt } from '@/application/services/interfaces/bcrypt';
 
-class BcryptJSService implements BcryptService {
+class BcryptService implements Bcrypt {
 	private salt: number;
 	constructor(salt?: number) {
 		this.salt = salt ?? 12;
@@ -15,4 +15,4 @@ class BcryptJSService implements BcryptService {
 	}
 }
 
-export { BcryptJSService };
+export { BcryptService };

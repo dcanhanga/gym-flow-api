@@ -3,12 +3,15 @@ import type { AccountRole } from '@/domain/entities/account-role';
 import type { RoleRepository } from '@/domain/repositories/role-repository';
 
 class InMemoryRoleRepository implements RoleRepository {
-	private roles: AccountRole[] = [];
+	private items: AccountRole[] = [];
+	public clear(): void {
+		this.items = [];
+	}
 
 	async findByName(
 		roleName: RoleRepository.RoleName,
 	): Promise<RoleRepository.FindByNameResponse> {
-		const role = this.roles.find((role) => role.name === roleName);
+		const role = this.items.find((role) => role.name === roleName);
 		if (!role) {
 			return null;
 		}
@@ -16,7 +19,7 @@ class InMemoryRoleRepository implements RoleRepository {
 	}
 
 	async findById(roleId: string): Promise<RoleRepository.FindByIdResponse> {
-		const role = this.roles.find((role) => role.id === roleId);
+		const role = this.items.find((role) => role.id === roleId);
 		if (!role) {
 			return null;
 		}
@@ -27,7 +30,7 @@ class InMemoryRoleRepository implements RoleRepository {
 		name: AccountRole['name'],
 	): Promise<RoleRepository.AddRoleResponse> {
 		const newRole: AccountRole = { id: randomUUID(), name };
-		this.roles.push(newRole);
+		this.items.push(newRole);
 		return newRole;
 	}
 }
