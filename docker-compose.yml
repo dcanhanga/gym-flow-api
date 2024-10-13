@@ -1,10 +1,10 @@
-name: api-solid
+name: gym-flow-db
 services:
   pg:
    image: bitnami/postgresql:13.16.0
    ports:
      - '5432:5432'
    environment:
-    - POSTGRES_USER=apiSolid
-    - POSTGRES_PASSWORD=apiSolid
-    - POSTGRES_DB=apiSolid
+    - POSTGRES_USER=admin
+    - POSTGRES_PASSWORD=admin
+    - POSTGRES_DB=gymFlow

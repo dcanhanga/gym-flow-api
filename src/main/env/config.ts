@@ -1,14 +1,18 @@
-import z from 'zod';
+import 'dotenv/config';
+import { z } from 'zod';
 
 const envSchema = z.object({
+	NODE_ENV: z.enum(['dev', 'test', 'production']).default('dev'),
+	DATABASE_URL: z.string().url(),
 	PORT: z.coerce.number().default(3333),
-	NODE_ENV: z.enum(['development', 'production', 'test']).default('production'),
 });
 
-const { success, data, error } = envSchema.safeParse(process.env);
-if (success === false) {
-	console.error('Environment variables are not set', error.errors);
-	throw new Error('Environment variables are not set');
+const _env = envSchema.safeParse(process.env);
+
+if (_env.success === false) {
+	console.error('❌ Invalid environment variables', _env.error.format());
+
+	throw new Error('Invalid environment variables.');
 }
 
-export const env = data;
+export const env = _env.data;

@@ -4,7 +4,7 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 export default defineConfig({
 	test: {
 		environment: 'node',
-		silent: true,
+		// silent: true,
 		coverage: {
 			all: false,
 			provider: 'v8',

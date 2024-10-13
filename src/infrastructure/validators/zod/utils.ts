@@ -1,49 +1,49 @@
-import { errorMessage } from '@/application/message/error-message';
-import type { ErrorResponse } from '@/application/services/interfaces/error-response';
+import { messages } from '@/application/errors/message';
+import type { ErrorResponse } from '@/application/validators/interfaces/error-response';
 import {
 	leastOneNumber,
 	leastOneSpecialCharacter,
 	leastOneUppercase,
-} from '@/application/utils/regex';
+} from '@/application/validators/utils/regex';
 import z, { type ZodIssue } from 'zod';
 
 function emailValidator() {
 	return z
 		.string({
-			required_error: errorMessage.EMAIL_IS_REQUIRED,
-			invalid_type_error: errorMessage.EMAIL_MUST_BE_A_STRING,
+			required_error: messages.EMAIL_IS_REQUIRED,
+			invalid_type_error: messages.EMAIL_MUST_BE_A_STRING,
 		})
-		.email({ message: errorMessage.INVALID_EMAIL });
+		.email({ message: messages.INVALID_EMAIL });
 }
 function nameValidator() {
 	return z.string({
-		required_error: errorMessage.NAME_IS_REQUIRED,
-		invalid_type_error: errorMessage.NAME_MUST_BE_A_STRING,
+		required_error: messages.NAME_IS_REQUIRED,
+		invalid_type_error: messages.NAME_MUST_BE_A_STRING,
 	});
 }
 function roleValidator() {
-	return z.enum(['user', 'super', 'admin'], {
-		message: errorMessage.ROLE_MUST_BE_USER_OR_ADMIN_OR_SUPER,
+	return z.enum(['ADMIN', 'SUPER', 'USER'], {
+		message: messages.ROLE_MUST_BE_USER_OR_ADMIN_OR_SUPER,
 	});
 }
 function passwordValidator() {
 	return z
 		.string({
-			required_error: errorMessage.PASSWORD_IS_REQUIRED,
-			invalid_type_error: errorMessage.PASSWORD_MUST_BE_A_STRING,
+			required_error: messages.PASSWORD_IS_REQUIRED,
+			invalid_type_error: messages.PASSWORD_MUST_BE_A_STRING,
 		})
 		.min(8, {
-			message: errorMessage.PASSWORD_MUST_HAVE_AT_LEAST_EIGHT_CHARACTERS,
+			message: messages.PASSWORD_MUST_HAVE_AT_LEAST_EIGHT_CHARACTERS,
 		})
 
 		.regex(leastOneNumber, {
-			message: errorMessage.PASSWORD_MUST_HAVE_AT_LEAST_ONE_NUMBER,
+			message: messages.PASSWORD_MUST_HAVE_AT_LEAST_ONE_NUMBER,
 		})
 		.regex(leastOneUppercase, {
-			message: errorMessage.PASSWORD_MUST_HAVE_AT_LEAST_ONE_CAPITAL_LETTER,
+			message: messages.PASSWORD_MUST_HAVE_AT_LEAST_ONE_CAPITAL_LETTER,
 		})
 		.regex(leastOneSpecialCharacter, {
-			message: errorMessage.PASSWORD_MUST_HAVE_AT_LEAST_ONE_SPECIAL_LETTER,
+			message: messages.PASSWORD_MUST_HAVE_AT_LEAST_ONE_SPECIAL_LETTER,
 		});
 }
 function formatErrorResponse(issues: ZodIssue[]): ErrorResponse {

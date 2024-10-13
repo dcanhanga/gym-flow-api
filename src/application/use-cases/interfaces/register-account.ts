@@ -1,4 +1,4 @@
-import type { Account } from '@/domain/entities/account';
+import type { Account } from '@/application/entities/account';
 
 interface RegisterAccount {
 	register(params: RegisterAccountParams): Promise<RegisterAccountResult>;

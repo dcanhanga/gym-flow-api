@@ -1,6 +1,6 @@
-import type { Bcrypt } from '@/application/services/interfaces/bcrypt';
+import type { HashManager } from '@/application/crypto/hash-manager';
 
-class StubBcryptService implements Bcrypt {
+class StubBcryptService implements HashManager {
 	hash(_plaintext: string): Promise<string> {
 		return Promise.resolve('hashedPassword');
 	}

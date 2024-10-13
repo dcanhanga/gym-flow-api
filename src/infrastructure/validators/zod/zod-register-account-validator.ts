@@ -1,12 +1,12 @@
 import { z } from 'zod';
 
-import { errorMessage } from '@/application/message/error-message';
+import { messages } from '@/application/errors/message';
 
 import type {
 	RegisterAccountErrorResponse,
 	RegisterAccountFields,
 	RegisterAccountValidator,
-} from '@/application/services/interfaces/register-account-validator';
+} from '@/application/validators/interfaces/register-account-validator';
 import {
 	emailValidator,
 	formatErrorResponse,
@@ -34,7 +34,7 @@ export class ZodRegisterAccountValidatorService
 				password: passwordValidator(),
 				role: roleValidator(),
 			})
-			.strict({ message: errorMessage.UNRECOGNIZED_FIELD });
+			.strict({ message: messages.UNRECOGNIZED_FIELD });
 
 		return registerAccountSchema.safeParse(data);
 	}

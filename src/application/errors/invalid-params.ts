@@ -1,4 +1,3 @@
-
 class InvalidParams extends Error {
 	errors: Record<string, string>;
 	constructor(message: string, errors: Record<string, string>) {
