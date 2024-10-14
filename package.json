@@ -21,6 +21,8 @@
 		"test:unit:watch": "vitest tests/unit",
 		"test:integration": "vitest run tests/integration",
 		"test:integration:watch": "vitest tests/integration",
+		"test:combo": "npm run test:unit & npm run test:integration",
+		"test:combo:watch": "npm run test:unit:watch & npm run test:integration:watch",
 		"test:coverage": "vitest run --coverage",
 		"test:ui": "vitest --ui",
 		"pretest:e2e": "run-s test:create-prisma-environment test:install-prisma-environment",
