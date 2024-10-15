@@ -1,5 +1,3 @@
-import { z } from 'zod';
-
 import { messages } from '@/application/errors/message';
 
 import type {
@@ -7,35 +5,42 @@ import type {
 	RegisterAccountFields,
 	RegisterAccountValidator,
 } from '@/application/validators/interfaces/register-account-validator';
+
+import { z } from 'zod';
 import {
-	emailValidator,
-	formatErrorResponse,
-	nameValidator,
-	passwordValidator,
-	roleValidator,
+	EmailValidator,
+	ErrorFormatter,
+	PasswordValidator,
+	RoleValidator,
 } from './utils';
 
-export class ZodRegisterAccountValidatorService
-	implements RegisterAccountValidator
-{
-	validate(data: RegisterAccountFields): RegisterAccountErrorResponse {
+class ZodRegisterAccountValidator implements RegisterAccountValidator {
+	private registerAccountSchema: z.ZodSchema;
+	private errorFormatter: ErrorFormatter;
+
+	constructor() {
+		this.registerAccountSchema = z
+			.object({
+				email: new EmailValidator().validate(),
+				name: new EmailValidator().validate(),
+				password: new PasswordValidator().validate(),
+				role: new RoleValidator().validate(),
+			})
+			.strict({ message: messages.UNRECOGNIZED_FIELD });
+		this.errorFormatter = new ErrorFormatter();
+	}
+
+	public validate(data: RegisterAccountFields): RegisterAccountErrorResponse {
 		const result = this.safeParse(data);
 		if (!result.success) {
-			return formatErrorResponse(result.error.issues);
+			return this.errorFormatter.format(result.error.issues);
 		}
 		return null;
 	}
 
 	private safeParse(data: RegisterAccountFields) {
-		const registerAccountSchema = z
-			.object({
-				email: emailValidator(),
-				name: nameValidator(),
-				password: passwordValidator(),
-				role: roleValidator(),
-			})
-			.strict({ message: messages.UNRECOGNIZED_FIELD });
-
-		return registerAccountSchema.safeParse(data);
+		return this.registerAccountSchema.safeParse(data);
 	}
 }
+
+export { ZodRegisterAccountValidator };

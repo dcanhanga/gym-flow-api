@@ -4,6 +4,7 @@ import { messages } from '@/application/errors/message';
 import { ZodRegisterRoleValidator } from '@/infrastructure/validators/zod/register-role-validator';
 
 const VALID_ROLES = ['ADMIN', 'USER', 'SUPER'] as const;
+const invalidInputs = [null, 123, 'string', [], true];
 
 describe('Validator: RegisterRoleValidator - teste unitário', () => {
 	let validator: ZodRegisterRoleValidator;
@@ -64,6 +65,15 @@ describe('Validator: RegisterRoleValidator - teste unitário', () => {
 				},
 			});
 		});
+		it.each(invalidInputs)(
+			'deve retornar erro quando a estrutura não for um objeto',
+			(input) => {
+				//@ts-ignore - Ignorando verificação de tipo para testar cenário de parâmetro inválido
+				const result = validator.validate(input);
+
+				expect(result?.errors).toHaveProperty('invalidType');
+			},
+		);
 	});
 
 	describe('Casos de sucesso', () => {

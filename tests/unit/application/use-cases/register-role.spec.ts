@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { randomUUID } from 'node:crypto';
 import { InvalidParams } from '@/application/errors/invalid-params';
 import { messages } from '@/application/errors/message';
 import { ResourceAlreadyExists } from '@/application/errors/resource-already-exists';
@@ -23,7 +24,6 @@ describe('Caso de uso: RegisterRoleUseCase - teste unitário', () => {
 	}
 
 	beforeEach(setup);
-
 	afterEach(() => {
 		vi.clearAllMocks();
 	});
@@ -51,6 +51,7 @@ describe('Caso de uso: RegisterRoleUseCase - teste unitário', () => {
 				errors: mockValidationResult.errors,
 			});
 		});
+
 		it('deve lançar ResourceAlreadyExists quando um papel com o mesmo nome já está cadastrado', async () => {
 			const mockRole = {
 				id: '1',
@@ -71,8 +72,17 @@ describe('Caso de uso: RegisterRoleUseCase - teste unitário', () => {
 		});
 		it('deve lançar um erro não previsto quando ocorrer uma exceção inesperada', async () => {
 			// @ts-ignore - Passando null para forçar um erro inesperado
-			await expect(sut.register(null)).rejects.Throw();
+			const roleRepositorySpy = vi.spyOn(roleRepository, 'findByName');
+
+			roleRepositorySpy.mockImplementation(() => {
+				throw new Error();
+			});
+
+			await expect(sut.register({ name: VALID_ROLES[0] })).rejects.toThrow(
+				Error,
+			);
 		});
+
 		it('deve lançar InvalidParams quando o nome do papel for uma string vazia', async () => {
 			const roleValidatorSpy = vi.spyOn(registerRoleValidator, 'validate');
 			roleValidatorSpy.mockReturnValue(
@@ -81,7 +91,6 @@ describe('Caso de uso: RegisterRoleUseCase - teste unitário', () => {
 				}),
 			);
 			// @ts-ignore - Ignorando verificação de tipo para testar cenário de parâmetro inválido
-
 			const result = sut.register({ name: '' });
 			await expect(result).rejects.toThrow(InvalidParams);
 		});
@@ -91,18 +100,18 @@ describe('Caso de uso: RegisterRoleUseCase - teste unitário', () => {
 		it.each(VALID_ROLES)(
 			'deve registrar um papel: "%s" com sucesso',
 			async (role) => {
-				const roleRepositorySpy = vi.spyOn(roleRepository, 'register');
-				roleRepositorySpy.mockResolvedValue({
-					id: '1',
+				const roleToSave = {
+					id: randomUUID(),
 					name: role,
-				});
+				};
+				const roleRepositorySpy = vi.spyOn(roleRepository, 'register');
+				roleRepositorySpy.mockResolvedValue(roleToSave);
 
 				const params = { name: role };
 
 				const result = await sut.register(params);
 				expect(roleRepositorySpy).toBeCalledWith(role);
-				expect(result.name).toStrictEqual(role);
-				expect(result.name).toBeTypeOf('string');
+				expect(result).toMatchObject(roleToSave);
 			},
 		);
 	});

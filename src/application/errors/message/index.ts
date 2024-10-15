@@ -29,3 +29,10 @@ const messages = {
 	ROLE_MUST_BE_USER_OR_ADMIN_OR_SUPER: 'ROLE_MUST_BE_USER_OR_ADMIN_OR_SUPER',
 } as const;
 export { messages };
+
+export function formatExpectedTypeMismatch(
+	expected: string,
+	received: string,
+): string {
+	return `EXPECTED_${expected.toUpperCase()}_RECEIVED_${received.toUpperCase()}`;
+}
