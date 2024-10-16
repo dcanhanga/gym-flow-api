@@ -1,5 +1,5 @@
 {
-	"name": "api-solid-node",
+	"name": "gym-flow",
 	"version": "1.0.0",
 	"description": "GyPass style app",
 	"main": "build/server.js",
@@ -8,29 +8,39 @@
 	},
 	"scripts": {
 		"docker:up": "docker compose up -d",
-		"start:dev": "npm run docker:up && tsx watch --env-file .env --inspect src/server.ts",
+		"dev": "tsx --watch src/main/server.ts",
 		"start": "node --env-file .env build/server.js",
 		"build": "tsup src --out-dir build",
 		"biome": "biome check --write --no-errors-on-unmatched",
 		"prepare": "husky",
+		"test:create-prisma-environment": "npm link ./prisma/vitest-environment-prisma",
+		"test:install-prisma-environment": "npm link vitest-environment-prisma",
 		"test": "vitest run",
 		"test:watch": "vitest",
+		"test:unit": "vitest run tests/unit",
+		"test:unit:watch": "vitest tests/unit",
+		"test:integration": "vitest run tests/integration",
+		"test:integration:watch": "vitest tests/integration",
+		"test:combo": "npm run test:unit & npm run test:integration",
+		"test:combo:watch": "npm run test:unit:watch & npm run test:integration:watch",
 		"test:coverage": "vitest run --coverage",
-		"test:ui": "vitest --ui"
+		"test:ui": "vitest --ui",
+		"pretest:e2e": "run-s test:create-prisma-environment test:install-prisma-environment",
+		"test:e2e": "vitest run tests/e2e",
+		"test:e2e:watch": "vitest tests/e2e"
 	},
 	"keywords": ["Api rest", "Solid", "typescript"],
 	"author": "Domingos Canhanga",
 	"license": "ISC",
 	"dependencies": {
 		"@prisma/client": "5.20.0",
-
 		"bcryptjs": "2.4.3",
 		"dayjs": "1.11.13",
+		"dotenv": "16.4.5",
 		"fastify": "4.28.1",
 		"zod": "3.23.8"
 	},
 	"devDependencies": {
-		"vite-tsconfig-paths": "5.0.1",
 		"@biomejs/biome": "1.9.1",
 		"@faker-js/faker": "9.0.3",
 		"@types/bcryptjs": "2.4.6",
@@ -42,11 +52,13 @@
 		"git-commit-msg-linter": "5.0.8",
 		"husky": "9.1.6",
 		"lint-staged": "15.2.10",
+		"npm-run-all": "4.1.5",
 		"prisma": "5.20.0",
 		"supertest": "7.0.0",
 		"tsup": "8.2.4",
 		"tsx": "4.19.1",
 		"typescript": "5.6.2",
+		"vite-tsconfig-paths": "5.0.1",
 		"vitest": "2.1.1"
 	}
 }

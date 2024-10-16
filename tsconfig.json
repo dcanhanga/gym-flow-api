@@ -7,14 +7,15 @@
 		"lib": ["es2023"],
 		"module": "node16",
 		"target": "es2022",
-
 		"strict": true,
 		"esModuleInterop": true,
 		"skipLibCheck": true,
 		"moduleResolution": "node16",
-		"baseUrl": "./",
+		"rootDirs": ["src", "tests"],
+		"baseUrl": "src",
 		"paths": {
-			"@/*": ["./src/*"]
+			"@/tests/*": ["../tests/*"],
+			"@/*": ["*"]
 		}
 	}
 }
