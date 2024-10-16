@@ -8,7 +8,7 @@ import { RegisterRoleController } from '@/presentation/controllers/register-role
 import { messages as controllerMessage } from '@/presentation/helpers/messages';
 import { RegisterRoleUseCaseStub } from './controllers/stubs/register-role';
 
-const VALID_ROLES = ['ADMIN', 'USER', 'SUPER'] as const;
+const VALID_ROLES = ['ADMIN', 'USER', 'MANAGER'] as const;
 const HTTP_STATUS = {
 	CREATED: 201,
 	BAD_REQUEST: 400,
@@ -46,9 +46,12 @@ describe('RegisterRoleController - teste unitário', () => {
 
 	describe('Caso de erros', () => {
 		it('deve retornar 400 quando o role for inválido', async () => {
-			const invalidParams = new InvalidParams(messages.INVALID_PARAMS, {
-				role: messages.ROLE_MUST_BE_USER_OR_ADMIN_OR_SUPER,
-			});
+			const invalidParams = new InvalidParams(
+				messages.INVALID_INPUT_PARAMETERS,
+				{
+					role: messages.ROLE_MUST_BE_MANAGER_ADMIN_OR_USER,
+				},
+			);
 			const registerRoleUseCaseSpy = vi.spyOn(
 				registerRoleUseCaseStub,
 				'register',
@@ -61,15 +64,15 @@ describe('RegisterRoleController - teste unitário', () => {
 			expect(registerRoleUseCaseSpy).toBeCalledWith('INVALID');
 			expect(registerRoleUseCaseSpy).toBeCalledTimes(1);
 			expect(response.statusCode).toStrictEqual(HTTP_STATUS.BAD_REQUEST);
-			expect(response.message).toStrictEqual(messages.INVALID_PARAMS);
+			expect(response.message).toStrictEqual(messages.INVALID_INPUT_PARAMETERS);
 			expect(response.errors).toStrictEqual({
-				role: messages.ROLE_MUST_BE_USER_OR_ADMIN_OR_SUPER,
+				role: messages.ROLE_MUST_BE_MANAGER_ADMIN_OR_USER,
 			});
 		});
 
 		it('deve retornar 409 quando o role já existir', async () => {
 			const resourceAlreadyExists = new ResourceAlreadyExists(
-				messages.ROLE_ALREADY_EXISTS,
+				messages.THE_ROLE_ALREADY_EXISTS,
 			);
 			const registerRoleUseCaseSpy = vi.spyOn(
 				registerRoleUseCaseStub,
@@ -82,7 +85,7 @@ describe('RegisterRoleController - teste unitário', () => {
 			expect(registerRoleUseCaseSpy).toBeCalledWith({ name: 'ADMIN' });
 			expect(registerRoleUseCaseSpy).toBeCalledTimes(1);
 			expect(response.statusCode).toStrictEqual(HTTP_STATUS.CONFLICT);
-			expect(response.message).toStrictEqual(messages.ROLE_ALREADY_EXISTS);
+			expect(response.message).toStrictEqual(messages.THE_ROLE_ALREADY_EXISTS);
 		});
 		it('deve retornar 500 quando um erro inesperado acontecer', async () => {
 			const registerRoleUseCaseSpy = vi.spyOn(

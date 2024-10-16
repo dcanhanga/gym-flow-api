@@ -1,25 +1,12 @@
 import type { Role } from '../entities/role';
-import type { RegisterRoleParams } from '../use-cases/interfaces/register-role';
-
 interface RoleRepository {
-	findByName(roleName: RoleName): Promise<FindByNameResponse>;
-	findById(roleId: string): Promise<FindByIdResponse>;
-	register(roleName: RoleName): Promise<RegisterResponse>;
+	findByName(roleName: string): Promise<OptionalRoleResponse>;
+	findById(roleId: string): Promise<OptionalRoleResponse>;
+	register(roleName: string): Promise<NewRoleResponse>;
 }
-
-type ResponsePossibleNull = Role | null;
-type RoleName = RegisterRoleParams['name'];
-type FindByNameResponse = ResponsePossibleNull;
-type FindByIdResponse = ResponsePossibleNull;
-type RegisterResponse = {
+type OptionalRoleResponse = Role | null;
+type NewRoleResponse = {
 	id: string;
 	name: string;
 };
-
-export type {
-	RoleRepository,
-	RoleName,
-	FindByNameResponse,
-	FindByIdResponse,
-	RegisterResponse,
-};
+export type { RoleRepository, OptionalRoleResponse, NewRoleResponse };

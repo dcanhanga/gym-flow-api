@@ -1,6 +1,6 @@
 import { prisma } from '@/infrastructure/repositories/prisma';
-import { env } from '../env/config';
-import { app } from '../fastify';
+import { env } from './config/env/config';
+import { app } from './config/fastify';
 
 async function checkDatabaseConnection(retries = 5, delay = 2000) {
 	for (let i = 0; i < retries; i++) {

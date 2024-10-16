@@ -10,7 +10,7 @@ import { messages as controllerMessage } from '@/presentation/helpers/messages';
 
 import { InMemoryRoleRepository } from '../../in-memory-repository/role-repository';
 
-const VALID_ROLES = ['ADMIN', 'USER', 'SUPER'] as const;
+const VALID_ROLES = ['ADMIN', 'USER', 'MANAGER'] as const;
 const HTTP_STATUS = {
 	CREATED: 201,
 	BAD_REQUEST: 400,
@@ -59,17 +59,17 @@ describe('RegisterRoleController - teste de integração', () => {
 			const response = await sut.handle({ name: 'INVALID' });
 
 			expect(response.statusCode).toStrictEqual(HTTP_STATUS.BAD_REQUEST);
-			expect(response.message).toStrictEqual(messages.INVALID_PARAMS);
+			expect(response.message).toStrictEqual(messages.INVALID_INPUT_PARAMETERS);
 			expect(response.errors).toStrictEqual({
-				name: messages.ROLE_MUST_BE_USER_OR_ADMIN_OR_SUPER,
+				name: messages.ROLE_MUST_BE_MANAGER_ADMIN_OR_USER,
 			});
 		});
-		it('deve retornar quando o tiver campo nao previsto', async () => {
+		it('deve retornar 400 quando o tiver campo nao previsto', async () => {
 			// @ts-ignore - Ignorando verificação de tipo para testar cenário de parâmetro inválido
 			const response = await sut.handle({ name: 'ADMIN', field: 'field' });
 
 			expect(response.statusCode).toStrictEqual(HTTP_STATUS.BAD_REQUEST);
-			expect(response.message).toStrictEqual(messages.INVALID_PARAMS);
+			expect(response.message).toStrictEqual(messages.INVALID_INPUT_PARAMETERS);
 			expect(response.errors).toStrictEqual({
 				field: messages.UNRECOGNIZED_FIELD,
 			});
@@ -80,7 +80,7 @@ describe('RegisterRoleController - teste de integração', () => {
 			const response = await sut.handle(params);
 
 			expect(response.statusCode).toStrictEqual(HTTP_STATUS.CONFLICT);
-			expect(response.message).toStrictEqual(messages.ROLE_ALREADY_EXISTS);
+			expect(response.message).toStrictEqual(messages.THE_ROLE_ALREADY_EXISTS);
 		});
 	});
 });

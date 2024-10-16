@@ -18,12 +18,15 @@ class RegisterRoleUseCase implements RegisterRole {
 		const hasError = this.registerRoleValidator.validate(params);
 
 		if (hasError) {
-			throw new InvalidParams(messages.INVALID_PARAMS, hasError.errors);
+			throw new InvalidParams(
+				messages.INVALID_INPUT_PARAMETERS,
+				hasError.errors,
+			);
 		}
 
 		const roleAlreadyExists = await this.roleRepository.findByName(params.name);
 		if (roleAlreadyExists) {
-			throw new ResourceAlreadyExists(messages.ROLE_ALREADY_EXISTS);
+			throw new ResourceAlreadyExists(messages.THE_ROLE_ALREADY_EXISTS);
 		}
 		const role = await this.roleRepository.register(params.name);
 		return role;

@@ -1,19 +1,13 @@
 import type { Account } from '../entities/account';
-
 interface RegisterAccountRepository {
-	register(
-		account: RegisterAccountRepository.RegisterInput,
-	): Promise<RegisterAccountRepository.RegisterResponse>;
-	findByEmail(
-		email: string,
-	): Promise<RegisterAccountRepository.FindByEmailResponse>;
+	findByAccessToken(accessToken: string): Promise<RegisterAccountInput>;
 }
-
-namespace RegisterAccountRepository {
-	export type AssignRole = { userId: string; roleId: string };
-	export type RegisterResponse = Omit<Account, 'password'>;
-	export type RegisterInput = Omit<Account, 'id' | 'role' | 'avatarUrl'>;
-	export type FindByEmailResponse = Account | null;
-}
-
-export { RegisterAccountRepository };
+type NewAccountResponse = Account;
+type RegisterAccountInput = Omit<Account, 'id' | 'role' | 'avatarUrl'>;
+type OptionalAccountResponse = NewAccountResponse | null;
+export type {
+	RegisterAccountRepository,
+	NewAccountResponse,
+	RegisterAccountInput,
+	OptionalAccountResponse,
+};

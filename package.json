@@ -8,7 +8,7 @@
 	},
 	"scripts": {
 		"docker:up": "docker compose up -d",
-		"dev": "tsx --watch src/main/server/index.ts",
+		"dev": "tsx --watch src/main/server.ts",
 		"start": "node --env-file .env build/server.js",
 		"build": "tsup src --out-dir build",
 		"biome": "biome check --write --no-errors-on-unmatched",

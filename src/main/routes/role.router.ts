@@ -1,6 +1,6 @@
 import { controller } from '@/main/factories/controllers/role';
 import type { FastifyInstance } from 'fastify';
-import { fastifyAdapterRoute } from '../fastify-adapter-route';
+import { fastifyAdapterRoute } from '../config/fastify/fastify-adapter-route';
 
 export default async (app: FastifyInstance): Promise<void> => {
 	const routes = async (app: FastifyInstance): Promise<void> => {

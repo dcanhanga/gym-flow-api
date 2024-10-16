@@ -1,5 +1,5 @@
 import { messages } from '@/application/errors/message';
-import { app } from '@/main/fastify';
+import { app } from '@/main/config/fastify';
 import request from 'supertest';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
@@ -21,12 +21,12 @@ describe('API: RegisterRole', () => {
 		});
 		it('deve retornar um erro 400 quando o corpo da requisição estiver inválido', async () => {
 			const response = await request(app.server).post(`/${baseUrl}`).send({
-				name: 'MANAGER',
+				name: 'SUPER',
 			});
 			expect(response.status).toBe(400);
-			expect(response.body.message).toBe(messages.INVALID_PARAMS);
+			expect(response.body.message).toBe(messages.INVALID_INPUT_PARAMETERS);
 			expect(response.body.errors).toStrictEqual({
-				name: messages.ROLE_MUST_BE_USER_OR_ADMIN_OR_SUPER,
+				name: messages.ROLE_MUST_BE_MANAGER_ADMIN_OR_USER,
 			});
 		});
 	});

@@ -1,4 +1,4 @@
-import { app } from '@/main/fastify';
+import { app } from '@/main/config/fastify';
 import request from 'supertest';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 

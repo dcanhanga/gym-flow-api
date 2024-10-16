@@ -2,7 +2,7 @@ import { readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import type { FastifyInstance } from 'fastify';
 
-const routesPath = join(__dirname, 'routes');
+const routesPath = join(__dirname, '../../routes');
 export const setupRoutes = async (app: FastifyInstance): Promise<void> => {
 	const files = readdirSync(routesPath);
 	for (const file of files) {
