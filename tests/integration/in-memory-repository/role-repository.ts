@@ -2,10 +2,8 @@ import { randomUUID } from 'node:crypto';
 
 import type { Role } from '@/application/entities/role';
 import type {
-	FindByIdResponse,
-	FindByNameResponse,
-	RegisterResponse,
-	RoleName,
+	NewRoleResponse,
+	OptionalRoleResponse,
 	RoleRepository,
 } from '@/application/repositories/role-repository';
 
@@ -15,13 +13,13 @@ class InMemoryRoleRepository implements RoleRepository {
 		this.items = [];
 	}
 
-	async findByName(name: RoleName): Promise<FindByNameResponse> {
+	async findByName(name: string): Promise<OptionalRoleResponse> {
 		return this.items.find((item) => item.name === name) ?? null;
 	}
-	async findById(id: string): Promise<FindByIdResponse> {
+	async findById(id: string): Promise<OptionalRoleResponse> {
 		return this.items.find((item) => item.id === id) ?? null;
 	}
-	async register(name: RoleName): Promise<RegisterResponse> {
+	async register(name: string): Promise<NewRoleResponse> {
 		const role = {
 			id: randomUUID(),
 			name,

@@ -2,6 +2,7 @@ interface ApiResponse<T> {
 	statusCode: number;
 	message: string | null;
 	data: T;
+	body: unknown;
 	errors: Errors | null;
 	meta: MetaData | null;
 }

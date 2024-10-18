@@ -1,6 +1,6 @@
-import { InvalidParams } from '../errors/invalid-params';
+import { InvalidParamsError } from '../errors/invalid-params';
 import { messages } from '../errors/message';
-import { ResourceAlreadyExists } from '../errors/resource-already-exists';
+import { ResourceAlreadyExistsError } from '../errors/resource-already-exists';
 import type { RoleRepository } from '../repositories/role-repository';
 import type { RegisterRoleValidator } from '../validators/interfaces/register-role-validator';
 import type {
@@ -18,7 +18,7 @@ class RegisterRoleUseCase implements RegisterRole {
 		const hasError = this.registerRoleValidator.validate(params);
 
 		if (hasError) {
-			throw new InvalidParams(
+			throw new InvalidParamsError(
 				messages.INVALID_INPUT_PARAMETERS,
 				hasError.errors,
 			);
@@ -26,7 +26,7 @@ class RegisterRoleUseCase implements RegisterRole {
 
 		const roleAlreadyExists = await this.roleRepository.findByName(params.name);
 		if (roleAlreadyExists) {
-			throw new ResourceAlreadyExists(messages.THE_ROLE_ALREADY_EXISTS);
+			throw new ResourceAlreadyExistsError(messages.THE_ROLE_ALREADY_EXISTS);
 		}
 		const role = await this.roleRepository.register(params.name);
 		return role;

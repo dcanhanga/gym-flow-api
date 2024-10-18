@@ -1,8 +1,8 @@
-class ResourceNotFound extends Error {
+class ResourceNotFoundError extends Error {
 	constructor(message: string) {
 		super(message);
-		this.name = 'ResourceNotFound';
+		this.name = 'ResourceNotFoundError';
 	}
 }
 
-export { ResourceNotFound };
+export { ResourceNotFoundError };

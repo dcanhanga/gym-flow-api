@@ -1,8 +1,8 @@
-class ResourceAlreadyExists extends Error {
+class ResourceAlreadyExistsError extends Error {
 	constructor(message: string) {
 		super(message);
-		this.name = 'ResourceAlreadyExists';
+		this.name = 'ResourceAlreadyExistsError';
 	}
 }
 
-export { ResourceAlreadyExists };
+export { ResourceAlreadyExistsError };

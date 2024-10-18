@@ -1,5 +1,5 @@
 -- CreateTable
-CREATE TABLE "acounts" (
+CREATE TABLE "accounts" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
@@ -8,7 +8,7 @@ CREATE TABLE "acounts" (
     "avatar_url" TEXT,
     "role_id" TEXT NOT NULL,
 
-    CONSTRAINT "acounts_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "accounts_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -20,10 +20,10 @@ CREATE TABLE "roles" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "acounts_email_key" ON "acounts"("email");
+CREATE UNIQUE INDEX "accounts_email_key" ON "accounts"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "roles_name_key" ON "roles"("name");
 
 -- AddForeignKey
-ALTER TABLE "acounts" ADD CONSTRAINT "acounts_role_id_fkey" FOREIGN KEY ("role_id") REFERENCES "roles"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "accounts" ADD CONSTRAINT "accounts_role_id_fkey" FOREIGN KEY ("role_id") REFERENCES "roles"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

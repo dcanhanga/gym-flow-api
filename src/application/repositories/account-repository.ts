@@ -1,13 +1,14 @@
 import type { Account } from '../entities/account';
-interface RegisterAccountRepository {
-	findByAccessToken(accessToken: string): Promise<RegisterAccountInput>;
+interface AccountRepository {
+	findById(accountId: string): Promise<OptionalAccountResponse>;
+	register(account: AccountInput): Promise<NewAccountResponse>;
 }
 type NewAccountResponse = Account;
-type RegisterAccountInput = Omit<Account, 'id' | 'role' | 'avatarUrl'>;
+type AccountInput = Omit<Account, 'id' | 'role' | 'avatarUrl'>;
 type OptionalAccountResponse = NewAccountResponse | null;
 export type {
-	RegisterAccountRepository,
+	AccountRepository,
 	NewAccountResponse,
-	RegisterAccountInput,
+	AccountInput,
 	OptionalAccountResponse,
 };

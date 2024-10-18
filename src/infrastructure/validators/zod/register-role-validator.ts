@@ -9,11 +9,11 @@ import type {
 import { ErrorFormatter, RoleValidator } from './utils';
 
 class ZodRegisterRoleValidator implements RegisterRoleValidator {
-	private registerAccountSchema: z.ZodSchema;
+	private registerRoleSchema: z.ZodSchema;
 	private errorFormatter: ErrorFormatter;
 
 	constructor() {
-		this.registerAccountSchema = z
+		this.registerRoleSchema = z
 			.object({
 				name: new RoleValidator().validate(),
 			})
@@ -30,7 +30,7 @@ class ZodRegisterRoleValidator implements RegisterRoleValidator {
 	}
 
 	private safeParse(data: RegisterRoleFields) {
-		return this.registerAccountSchema.safeParse(data);
+		return this.registerRoleSchema.safeParse(data);
 	}
 }
 

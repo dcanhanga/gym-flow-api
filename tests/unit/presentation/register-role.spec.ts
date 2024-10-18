@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { InvalidParams } from '@/application/errors/invalid-params';
+import { InvalidParamsError } from '@/application/errors/invalid-params';
 import { messages } from '@/application/errors/message';
-import { ResourceAlreadyExists } from '@/application/errors/resource-already-exists';
+import { ResourceAlreadyExistsError } from '@/application/errors/resource-already-exists';
 import type { RegisterRole } from '@/application/use-cases/interfaces/register-role';
 import { RegisterRoleController } from '@/presentation/controllers/register-role';
 import { messages as controllerMessage } from '@/presentation/helpers/messages';
@@ -46,7 +46,7 @@ describe('RegisterRoleController - teste unitário', () => {
 
 	describe('Caso de erros', () => {
 		it('deve retornar 400 quando o role for inválido', async () => {
-			const invalidParams = new InvalidParams(
+			const invalidParams = new InvalidParamsError(
 				messages.INVALID_INPUT_PARAMETERS,
 				{
 					role: messages.ROLE_MUST_BE_MANAGER_ADMIN_OR_USER,
@@ -71,7 +71,7 @@ describe('RegisterRoleController - teste unitário', () => {
 		});
 
 		it('deve retornar 409 quando o role já existir', async () => {
-			const resourceAlreadyExists = new ResourceAlreadyExists(
+			const resourceAlreadyExists = new ResourceAlreadyExistsError(
 				messages.THE_ROLE_ALREADY_EXISTS,
 			);
 			const registerRoleUseCaseSpy = vi.spyOn(

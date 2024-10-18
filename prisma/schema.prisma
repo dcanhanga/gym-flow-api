@@ -7,7 +7,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Acount {
+model Account {
   id           String   @id @default(uuid())
   name         String
   email        String   @unique()
@@ -18,14 +18,13 @@ model Acount {
 
   role Role @relation(fields: [roleId], references: [id])
 
-  @@map("acounts")
+  @@map("accounts")
 }
 
 model Role {
-  id   String @id @default(uuid())
-  name String @unique()
-
-  acounts Acount[]
+  id       String    @id @default(uuid())
+  name     String    @unique()
+  accounts Account[]
 
   @@map("roles")
 }

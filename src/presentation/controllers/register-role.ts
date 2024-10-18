@@ -1,5 +1,5 @@
-import { InvalidParams } from '@/application/errors/invalid-params';
-import { ResourceAlreadyExists } from '@/application/errors/resource-already-exists';
+import { InvalidParamsError } from '@/application/errors/invalid-params';
+import { ResourceAlreadyExistsError } from '@/application/errors/resource-already-exists';
 
 import type {
 	RegisterRole,
@@ -29,10 +29,10 @@ class RegisterRoleController
 	private handleError(
 		error: unknown,
 	): ApiResponse<RegisterRoleController.Response> {
-		if (error instanceof InvalidParams) {
+		if (error instanceof InvalidParamsError) {
 			return HttpResponse.badRequest(error.message, error.errors);
 		}
-		if (error instanceof ResourceAlreadyExists) {
+		if (error instanceof ResourceAlreadyExistsError) {
 			return HttpResponse.conflict(error.message);
 		}
 

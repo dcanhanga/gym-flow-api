@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { messages } from '@/application/errors/message';
 import type { RegisterRole } from '@/application/use-cases/interfaces/register-role';
@@ -10,7 +10,7 @@ import { messages as controllerMessage } from '@/presentation/helpers/messages';
 
 import { InMemoryRoleRepository } from '../../in-memory-repository/role-repository';
 
-const VALID_ROLES = ['ADMIN', 'USER', 'MANAGER'] as const;
+const VALID_ROLES = ['ADMIN', 'CLIENT', 'MANAGER'] as const;
 const HTTP_STATUS = {
 	CREATED: 201,
 	BAD_REQUEST: 400,

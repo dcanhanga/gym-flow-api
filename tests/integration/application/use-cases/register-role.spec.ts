@@ -1,15 +1,15 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { InvalidParams } from '@/application/errors/invalid-params';
+import { InvalidParamsError } from '@/application/errors/invalid-params';
 import { messages } from '@/application/errors/message';
-import { ResourceAlreadyExists } from '@/application/errors/resource-already-exists';
+import { ResourceAlreadyExistsError } from '@/application/errors/resource-already-exists';
 
 import { RegisterRoleUseCase } from '@/application/use-cases/register-role';
 import type { RegisterRoleValidator } from '@/application/validators/interfaces/register-role-validator';
 import { ZodRegisterRoleValidator } from '@/infrastructure/validators/zod/register-role-validator';
 import { InMemoryRoleRepository } from '../../in-memory-repository/role-repository';
 
-const VALID_ROLES = ['ADMIN', 'USER', 'MANAGER'] as const;
+const VALID_ROLES = ['ADMIN', 'CLIENT', 'MANAGER'] as const;
 const INVALID_ROLES = [' ', 'admin', 1, {}];
 
 describe('Caso de uso: RegisterRoleUseCase - teste de integração', () => {
@@ -38,7 +38,7 @@ describe('Caso de uso: RegisterRoleUseCase - teste de integração', () => {
 	});
 	describe('Casos de erro', () => {
 		it('deve lançar um erro ResourceAlreadyExists quando role já existe', async () => {
-			const roleAlreadyExists = new ResourceAlreadyExists(
+			const roleAlreadyExists = new ResourceAlreadyExistsError(
 				messages.THE_ROLE_ALREADY_EXISTS,
 			);
 			const params = { name: 'ADMIN' } as const;
@@ -51,7 +51,7 @@ describe('Caso de uso: RegisterRoleUseCase - teste de integração', () => {
 		it.each(INVALID_ROLES)(
 			'deve lançar um erro InvalidParams quando role for invalido',
 			async (role) => {
-				const invalidParams = new InvalidParams(
+				const invalidParams = new InvalidParamsError(
 					messages.INVALID_INPUT_PARAMETERS,
 					{
 						role: messages.INVALID_INPUT_PARAMETERS,
@@ -65,7 +65,7 @@ describe('Caso de uso: RegisterRoleUseCase - teste de integração', () => {
 			},
 		);
 		it('deve lançar um erro InvalidParams quando o tiver campo nao previsto', async () => {
-			const invalidParams = new InvalidParams(
+			const invalidParams = new InvalidParamsError(
 				messages.INVALID_INPUT_PARAMETERS,
 				{
 					filed: messages.UNRECOGNIZED_FIELD,

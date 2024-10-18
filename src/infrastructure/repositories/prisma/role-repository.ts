@@ -1,27 +1,26 @@
 import type {
-	FindByNameResponse,
-	RegisterResponse,
-	RoleName,
+	NewRoleResponse,
+	OptionalRoleResponse,
 	RoleRepository,
 } from '@/application/repositories/role-repository';
 
 import { prisma } from '.';
 class PrismaRoleRepository implements RoleRepository {
-	async findByName(roleName: RoleName): Promise<FindByNameResponse> {
+	async findByName(roleName: string): Promise<OptionalRoleResponse> {
 		return prisma.role.findUnique({
 			where: {
 				name: roleName,
 			},
 		});
 	}
-	findById(roleId: string): Promise<FindByNameResponse> {
+	findById(roleId: string): Promise<OptionalRoleResponse> {
 		return prisma.role.findUnique({
 			where: {
 				id: roleId,
 			},
 		});
 	}
-	async register(roleName: RoleName): Promise<RegisterResponse> {
+	async register(roleName: string): Promise<NewRoleResponse> {
 		return prisma.role.create({
 			data: {
 				name: roleName,

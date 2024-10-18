@@ -54,11 +54,11 @@ class HttpResponse {
 			message,
 		});
 	}
-	public static forbidden(): ApiResponse<null> {
+	public static forbidden(message: string): ApiResponse<null> {
 		return HttpResponse.buildResponse({
 			statusCode: 403,
 			data: null,
-			message: 'FORBIDDEN',
+			message,
 		});
 	}
 	public static conflict(message: string): ApiResponse<null> {
@@ -75,6 +75,7 @@ class HttpResponse {
 			errors: input?.errors ?? null,
 			message: input.message ?? null,
 			meta: input.meta ?? null,
+			body: null,
 			statusCode: input.statusCode,
 		};
 	}

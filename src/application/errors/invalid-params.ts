@@ -1,10 +1,10 @@
-class InvalidParams extends Error {
+class InvalidParamsError extends Error {
 	errors: Record<string, string>;
 	constructor(message: string, errors: Record<string, string>) {
 		super(message);
-		this.name = 'InvalidParams';
+		this.name = 'InvalidParamsError';
 		this.errors = errors;
 	}
 }
 
-export { InvalidParams };
+export { InvalidParamsError };
