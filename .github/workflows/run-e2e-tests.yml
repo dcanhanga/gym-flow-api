@@ -28,4 +28,4 @@ jobs:
       env:
         DATABASE_URL: ${{ secrets.DATABASE_URL }}
         JWT_SECRET: ${{ secrets.JWT_SECRET }}
-      run: npm test:e2e
+      run: npm run test:e2e
