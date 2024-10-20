@@ -1,46 +1,54 @@
 import z, { type ZodIssue } from 'zod';
 
-import {
-	formatExpectedTypeMismatch,
-	messages,
-} from '@/application/errors/message';
 import type { ErrorResponse } from '@/application/validators/interfaces/error-response';
+import { formatExpectedTypeMismatch, messages } from '@/domain/errors/message';
 
-interface ZodValidator<T> {
-	validate(): z.ZodType<T>;
-}
+// interface ZodValidator<T> {
+// 	validate(): z.ZodType<T>;
+// }
 
-class RoleValidator implements ZodValidator<'ADMIN' | 'MANAGER' | 'CLIENT'> {
-	validate() {
-		return z.enum(['ADMIN', 'MANAGER', 'CLIENT'], {
-			message: messages.ROLE_MUST_BE_MANAGER_ADMIN_OR_USER,
-		});
-	}
-}
+// class RoleNameValidator {
+// 	public static validate() {
+// 		return z.enum(['ADMIN', 'MANAGER', 'CLIENT'], {
+// 			message: messages.ROLE_MUST_BE_MANAGER_ADMIN_OR_USER,
+// 		});
+// 	}
+// }
 
-class JWTTokenValidator implements ZodValidator<string> {
-	validate() {
-		return z
-			.string({
-				invalid_type_error: messages.TOKEN_MUST_BE_A_VALID_STRING,
-				required_error: messages.THE_TOKEN_IS_QUIRED,
-			})
-			.refine(
-				(token) => {
-					const parts = token.split('.');
-					return (
-						parts.length === 3 && parts.every((part) => part.trim() !== '')
-					);
-				},
-				{
-					message: messages.TOKEN_MUST_BE_A_VALID_STRING,
-				},
-			);
-	}
-}
+const roleNameValidator = z.enum(['ADMIN', 'MANAGER', 'CLIENT'], {
+	message: messages.ROLE_MUST_BE_MANAGER_ADMIN_OR_USER,
+});
+
+const uuidValidator = z
+	.string({
+		invalid_type_error: messages.MUST_BE_A_VALID_STRING,
+		required_error: messages.ID_IS_QUIRED,
+	})
+	.uuid({ message: messages.INVALID_ID_FORMAT });
+
+// class JWTTokenValidator implements ZodValidator<string> {
+// 	validate() {
+// 		return z
+// 			.string({
+// 				invalid_type_error: messages.MUST_BE_A_VALID_STRING,
+// 				required_error: messages.TOKEN_IS_QUIRED,
+// 			})
+// 			.refine(
+// 				(token) => {
+// 					const parts = token.split('.');
+// 					return (
+// 						parts.length === 3 && parts.every((part) => part.trim() !== '')
+// 					);
+// 				},
+// 				{
+// 					message: messages.MUST_BE_A_VALID_STRING,
+// 				},
+// 			);
+// 	}
+// }
 
 class ErrorFormatter {
-	format(issues: ZodIssue[]): ErrorResponse {
+	public static format(issues: ZodIssue[]) {
 		const response: ErrorResponse = {
 			errors: {},
 		};
@@ -76,4 +84,4 @@ class ErrorFormatter {
 	}
 }
 
-export { RoleValidator, ErrorFormatter, JWTTokenValidator };
+export { ErrorFormatter, roleNameValidator, uuidValidator };

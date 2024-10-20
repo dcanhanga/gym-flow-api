@@ -1,12 +1,12 @@
 import { z } from 'zod';
 
-import { messages } from '@/application/errors/message';
+import { messages } from '@/domain/errors/message';
 
 import type {
 	LoadAccountByTokenValidator,
 	Params,
 } from '@/application/validators/interfaces/load-account-by-token-validator';
-import { ErrorFormatter, JWTTokenValidator } from './utils';
+import { ErrorFormatter, JWTTokenValidator } from './utils2';
 
 class ZodLoadAccountByTokenValidator implements LoadAccountByTokenValidator {
 	private loadAccountByTokenSchema: z.ZodSchema;

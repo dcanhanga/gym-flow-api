@@ -4,9 +4,9 @@ import type {
 	RegisterRole,
 	RegisterRoleParams,
 	RegisterRoleResult,
-} from '@/application/use-cases/interfaces/register-role';
+} from '@/domain/use-cases/register-role';
 
-class RegisterRoleUseCaseStub implements RegisterRole {
+class StubRegisterRoleService implements RegisterRole {
 	async register(params: RegisterRoleParams): Promise<RegisterRoleResult> {
 		return {
 			id: randomUUID(),
@@ -14,4 +14,4 @@ class RegisterRoleUseCaseStub implements RegisterRole {
 		};
 	}
 }
-export { RegisterRoleUseCaseStub };
+export { StubRegisterRoleService };

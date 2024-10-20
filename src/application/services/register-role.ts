@@ -1,15 +1,14 @@
-import { InvalidParamsError } from '../errors/invalid-params';
-import { messages } from '../errors/message';
-import { ResourceAlreadyExistsError } from '../errors/resource-already-exists';
-import type { RoleRepository } from '../repositories/role-repository';
-import type { RegisterRoleValidator } from '../validators/interfaces/register-role-validator';
+import { InvalidParametersError, ResourceConflictError } from '@/domain/errors';
+import { messages } from '@/domain/errors/message';
 import type {
 	RegisterRole,
 	RegisterRoleParams,
 	RegisterRoleResult,
-} from './interfaces/register-role';
+} from '@/domain/use-cases/register-role';
+import type { RoleRepository } from '../repositories/role-repository';
+import type { RegisterRoleValidator } from '../validators/interfaces/register-role-validator';
 
-class RegisterRoleUseCase implements RegisterRole {
+class RegisterRoleService implements RegisterRole {
 	constructor(
 		private readonly roleRepository: RoleRepository,
 		private readonly registerRoleValidator: RegisterRoleValidator,
@@ -18,7 +17,7 @@ class RegisterRoleUseCase implements RegisterRole {
 		const hasError = this.registerRoleValidator.validate(params);
 
 		if (hasError) {
-			throw new InvalidParamsError(
+			throw new InvalidParametersError(
 				messages.INVALID_INPUT_PARAMETERS,
 				hasError.errors,
 			);
@@ -26,11 +25,11 @@ class RegisterRoleUseCase implements RegisterRole {
 
 		const roleAlreadyExists = await this.roleRepository.findByName(params.name);
 		if (roleAlreadyExists) {
-			throw new ResourceAlreadyExistsError(messages.THE_ROLE_ALREADY_EXISTS);
+			throw new ResourceConflictError(messages.ROLE_ALREADY_EXISTS);
 		}
 		const role = await this.roleRepository.register(params.name);
 		return role;
 	}
 }
 
-export { RegisterRoleUseCase };
+export { RegisterRoleService };

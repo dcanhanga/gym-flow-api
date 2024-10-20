@@ -1,12 +1,12 @@
 import { randomUUID } from 'node:crypto';
 
-import type { Account } from '@/application/entities/account';
 import type {
 	AccountInput,
 	AccountRepository,
 	NewAccountResponse,
 	OptionalAccountResponse,
 } from '@/application/repositories/account-repository';
+import type { Account } from '@/domain/entities/account';
 
 class InMemoryAccountRepository implements AccountRepository {
 	private items: Account[] = [];

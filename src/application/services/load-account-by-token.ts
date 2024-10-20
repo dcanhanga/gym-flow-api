@@ -1,19 +1,21 @@
-import type { TokenGenerator } from '../auth/token-generator';
-import type { Account } from '../entities/account';
-import { ForbiddenError } from '../errors/forbidden';
-import { messages } from '../errors/message';
-import { UnauthorizedError } from '../errors/unauthorized';
+import type { Account } from '@/domain/entities/account';
 
-import type { AccountRepository } from '../repositories/account-repository';
-import type { RoleRepository } from '../repositories/role-repository';
-import type { LoadAccountByTokenValidator } from '../validators/interfaces/load-account-by-token-validator';
+import {
+	AccessForbiddenError,
+	AuthenticationRequiredError,
+} from '@/domain/errors';
+import { messages } from '@/domain/errors/message';
 import type {
 	LoadAccountByToken,
 	LoadAccountByTokenParams,
 	LoadAccountByTokenResult,
-} from './interfaces/load-account-by-token';
+} from '@/domain/use-cases/load-account-by-token';
+import type { TokenGenerator } from '../auth/token-generator';
+import type { AccountRepository } from '../repositories/account-repository';
+import type { RoleRepository } from '../repositories/role-repository';
+import type { LoadAccountByTokenValidator } from '../validators/interfaces/load-account-by-token-validator';
 
-class LoadAccountByTokenUseCase implements LoadAccountByToken {
+class LoadAccountByTokenService implements LoadAccountByToken {
 	constructor(
 		private readonly accountRepository: AccountRepository,
 		private readonly roleRepository: RoleRepository,
@@ -27,13 +29,13 @@ class LoadAccountByTokenUseCase implements LoadAccountByToken {
 	): Promise<LoadAccountByTokenResult> {
 		const hasError = this.tokenValidator.validate(params);
 		if (hasError) {
-			throw new UnauthorizedError(messages.ACESSES_DENIED);
+			throw new AuthenticationRequiredError(messages.ACESSES_DENIED);
 		}
 		const { token } = params;
 		const { userId } = this.validateToken(token);
 		const account = await this.accountRepository.findById(userId);
 		if (!account) {
-			throw new UnauthorizedError(messages.ACESSES_DENIED);
+			throw new AuthenticationRequiredError(messages.ACESSES_DENIED);
 		}
 		await this.checkPermissions(account);
 		return account;
@@ -45,7 +47,7 @@ class LoadAccountByTokenUseCase implements LoadAccountByToken {
 			const hasPermission =
 				roleFounded && !this.requiredRole.includes(roleFounded.name);
 			if (hasPermission) {
-				throw new ForbiddenError(messages.ACESSES_DENIED);
+				throw new AccessForbiddenError(messages.ACESSES_DENIED);
 			}
 		}
 	}
@@ -56,7 +58,7 @@ class LoadAccountByTokenUseCase implements LoadAccountByToken {
 			}>(token);
 
 			if (!verifiedPayload) {
-				throw new UnauthorizedError(messages.ACESSES_DENIED);
+				throw new AuthenticationRequiredError(messages.ACESSES_DENIED);
 			}
 			return verifiedPayload;
 		} catch (error) {
@@ -65,7 +67,7 @@ class LoadAccountByTokenUseCase implements LoadAccountByToken {
 				(error.name === 'JsonWebTokenError' ||
 					error.name === 'TokenExpiredError')
 			) {
-				throw new UnauthorizedError(messages.ACESSES_DENIED);
+				throw new AuthenticationRequiredError(messages.ACESSES_DENIED);
 			}
 
 			throw error;
@@ -73,4 +75,4 @@ class LoadAccountByTokenUseCase implements LoadAccountByToken {
 	}
 }
 
-export { LoadAccountByTokenUseCase };
+export { LoadAccountByTokenService };

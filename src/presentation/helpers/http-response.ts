@@ -1,4 +1,4 @@
-import { messages } from '@/application/errors/message';
+import { messages } from '@/domain/errors/message';
 import type { ApiResponse, Errors, MetaData } from './interface/api-response';
 type BuildResponse<T> = {
 	statusCode: number;

@@ -1,4 +1,4 @@
-import type { LoadAccountByTokenParams } from '@/application/use-cases/interfaces/load-account-by-token';
+import type { LoadAccountByTokenParams } from '@/domain/use-cases/load-account-by-token';
 
 import type { ErrorResponse } from './error-response';
 

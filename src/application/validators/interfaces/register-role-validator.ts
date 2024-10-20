@@ -1,4 +1,4 @@
-import type { RegisterRoleParams } from '@/application/use-cases/interfaces/register-role';
+import type { RegisterRoleParams } from '@/domain/use-cases/register-role';
 import type { ErrorResponse } from './error-response';
 
 interface RegisterRoleValidator {

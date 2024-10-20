@@ -1,10 +1,10 @@
 import { RegisterRoleController } from '@/presentation/controllers/register-role';
-import { useCase } from '../use-cases/role';
+import { role } from '../services/role';
 
-function registerRoleControllerFactory() {
-	return new RegisterRoleController(useCase.register);
+function registerRoleFactory() {
+	return new RegisterRoleController(role.register);
 }
 
 export const controller = {
-	register: registerRoleControllerFactory(),
+	register: registerRoleFactory(),
 };

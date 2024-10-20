@@ -1,4 +1,4 @@
-import type { Account } from '../entities/account';
+import type { Account } from '../../domain/entities/account';
 interface AccountRepository {
 	findById(accountId: string): Promise<OptionalAccountResponse>;
 	register(account: AccountInput): Promise<NewAccountResponse>;

@@ -1,29 +1,40 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { InvalidParamsError } from '@/application/errors/invalid-params';
-import { messages } from '@/application/errors/message';
-import { ResourceAlreadyExistsError } from '@/application/errors/resource-already-exists';
-
-import { RegisterRoleUseCase } from '@/application/use-cases/register-role';
-import type { RegisterRoleValidator } from '@/application/validators/interfaces/register-role-validator';
+import { RegisterRoleService } from '@/application/services/register-role';
+import {
+	InvalidParametersError,
+	ResourceConflictError,
+} from '@/domain/errors/';
+import { messages } from '@/domain/errors/message';
 import { ZodRegisterRoleValidator } from '@/infrastructure/validators/zod/register-role-validator';
 import { InMemoryRoleRepository } from '../../in-memory-repository/role-repository';
 
 const VALID_ROLES = ['ADMIN', 'CLIENT', 'MANAGER'] as const;
 const INVALID_ROLES = [' ', 'admin', 1, {}];
 
-describe('Caso de uso: RegisterRoleUseCase - teste de integração', () => {
-	let roleRepository: InMemoryRoleRepository = new InMemoryRoleRepository();
-	let registerRoleValidator: RegisterRoleValidator =
-		new ZodRegisterRoleValidator();
-	let sut = new RegisterRoleUseCase(roleRepository, registerRoleValidator);
+describe('RegisterRoleService - teste de integração', () => {
+	type InitTypes = {
+		roleRepository: InMemoryRoleRepository;
+		registerRoleValidator: ZodRegisterRoleValidator;
+		sut: RegisterRoleService;
+	};
+	function init(): InitTypes {
+		const roleRepository = new InMemoryRoleRepository();
+		const registerRoleValidator = new ZodRegisterRoleValidator();
+		const sut = new RegisterRoleService(roleRepository, registerRoleValidator);
+		return {
+			roleRepository,
+			registerRoleValidator,
+			sut,
+		};
+	}
+	let setup: InitTypes;
 	beforeEach(() => {
-		roleRepository = new InMemoryRoleRepository();
-		registerRoleValidator = new ZodRegisterRoleValidator();
-		sut = new RegisterRoleUseCase(roleRepository, registerRoleValidator);
+		setup = init();
 	});
+
 	afterEach(() => {
-		roleRepository.clear();
+		setup.roleRepository.clear();
 	});
 
 	describe('Casos de sucesso', () => {
@@ -31,27 +42,29 @@ describe('Caso de uso: RegisterRoleUseCase - teste de integração', () => {
 			'deve registrar um novo role "%s" com sucesso',
 			async (role) => {
 				const params = { name: role };
-				const result = await sut.register(params);
+				const result = await setup.sut.register(params);
 				expect(result.name).toStrictEqual(role);
 			},
 		);
 	});
 	describe('Casos de erro', () => {
 		it('deve lançar um erro ResourceAlreadyExists quando role já existe', async () => {
-			const roleAlreadyExists = new ResourceAlreadyExistsError(
-				messages.THE_ROLE_ALREADY_EXISTS,
+			const { sut } = setup;
+			const roleAlreadyExists = new ResourceConflictError(
+				messages.ROLE_ALREADY_EXISTS,
 			);
 			const params = { name: 'ADMIN' } as const;
 			await sut.register(params);
 
-			await expect(sut.register(params)).rejects.toStrictEqual(
+			await expect(setup.sut.register(params)).rejects.toStrictEqual(
 				roleAlreadyExists,
 			);
 		});
 		it.each(INVALID_ROLES)(
 			'deve lançar um erro InvalidParams quando role for invalido',
 			async (role) => {
-				const invalidParams = new InvalidParamsError(
+				const { sut } = setup;
+				const invalidParams = new InvalidParametersError(
 					messages.INVALID_INPUT_PARAMETERS,
 					{
 						role: messages.INVALID_INPUT_PARAMETERS,
@@ -64,8 +77,9 @@ describe('Caso de uso: RegisterRoleUseCase - teste de integração', () => {
 				);
 			},
 		);
-		it('deve lançar um erro InvalidParams quando o tiver campo nao previsto', async () => {
-			const invalidParams = new InvalidParamsError(
+		it('deve lançar um erro InvalidParams quando o tiver campo não previsto', async () => {
+			const { sut } = setup;
+			const invalidParams = new InvalidParametersError(
 				messages.INVALID_INPUT_PARAMETERS,
 				{
 					filed: messages.UNRECOGNIZED_FIELD,

@@ -1,12 +1,12 @@
 import { z } from 'zod';
 
-import { messages } from '@/application/errors/message';
 import type {
 	RegisterRoleFields,
 	RegisterRoleValidator,
 } from '@/application/validators/interfaces/register-role-validator';
+import { messages } from '@/domain/errors/message';
 
-import { ErrorFormatter, RoleValidator } from './utils';
+import { ErrorFormatter, RoleValidator } from './utils2';
 
 class ZodRegisterRoleValidator implements RegisterRoleValidator {
 	private registerRoleSchema: z.ZodSchema;

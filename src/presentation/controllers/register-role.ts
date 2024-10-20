@@ -1,10 +1,11 @@
-import { InvalidParamsError } from '@/application/errors/invalid-params';
-import { ResourceAlreadyExistsError } from '@/application/errors/resource-already-exists';
-
+import {
+	InvalidParametersError,
+	ResourceConflictError,
+} from '@/domain/errors/';
 import type {
 	RegisterRole,
 	RegisterRoleParams,
-} from '@/application/use-cases/interfaces/register-role';
+} from '@/domain/use-cases/register-role';
 import { HttpResponse } from '../helpers/http-response';
 import type { ApiResponse } from '../helpers/interface/api-response';
 import { messages } from '../helpers/messages';
@@ -29,10 +30,10 @@ class RegisterRoleController
 	private handleError(
 		error: unknown,
 	): ApiResponse<RegisterRoleController.Response> {
-		if (error instanceof InvalidParamsError) {
+		if (error instanceof InvalidParametersError) {
 			return HttpResponse.badRequest(error.message, error.errors);
 		}
-		if (error instanceof ResourceAlreadyExistsError) {
+		if (error instanceof ResourceConflictError) {
 			return HttpResponse.conflict(error.message);
 		}
 

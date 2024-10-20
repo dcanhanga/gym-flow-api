@@ -1,6 +1,6 @@
 import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { messages } from '@/application/errors/message';
+import { messages } from '@/domain/errors/message';
 import { ZodRegisterRoleValidator } from '@/infrastructure/validators/zod/register-role-validator';
 
 const VALID_ROLES = ['ADMIN', 'CLIENT', 'MANAGER'] as const;

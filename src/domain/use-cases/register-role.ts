@@ -1,4 +1,4 @@
-import type { Role } from '@/application/entities/role';
+import type { Role } from '@/domain/entities/role1';
 
 interface RegisterRole {
 	register(params: RegisterRoleParams): Promise<RegisterRoleResult>;

@@ -1,11 +1,11 @@
 import { randomUUID } from 'node:crypto';
 
-import type { Role } from '@/application/entities/role';
 import type {
 	NewRoleResponse,
 	OptionalRoleResponse,
 	RoleRepository,
 } from '@/application/repositories/role-repository';
+import type { Role } from '@/domain/entities/role1';
 
 class InMemoryRoleRepository implements RoleRepository {
 	private items: Role[] = [];

@@ -1,4 +1,4 @@
-import { messages } from '@/application/errors/message';
+import { messages } from '@/domain/errors/message';
 import { app } from '@/main/config/fastify';
 import request from 'supertest';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';

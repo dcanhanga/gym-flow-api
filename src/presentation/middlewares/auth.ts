@@ -1,10 +1,12 @@
-import { ForbiddenError } from '@/application/errors/forbidden';
-import { UnauthorizedError } from '@/application/errors/unauthorized';
 import type {
 	LoadAccountByToken,
 	LoadAccountByTokenParams,
-} from '@/application/use-cases/interfaces/load-account-by-token';
+} from '@/domain/use-cases/load-account-by-token';
 
+import {
+	AccessForbiddenError,
+	AuthenticationRequiredError,
+} from '@/domain/errors';
 import { HttpResponse } from '../helpers/http-response';
 import type { ApiResponse } from '../helpers/interface/api-response';
 import type { Middleware } from './interfaces/middleware';
@@ -18,17 +20,16 @@ class AuthMiddleware
 	): Promise<ApiResponse<AuthMiddleware.Response>> {
 		try {
 			const account = await this.loadAccountByToken.load(request);
-
 			return HttpResponse.ok('', { accountId: account.id });
 		} catch (error) {
 			return this.handleError(error);
 		}
 	}
 	private handleError(error: unknown): ApiResponse<AuthMiddleware.Response> {
-		if (error instanceof ForbiddenError) {
+		if (error instanceof AccessForbiddenError) {
 			return HttpResponse.forbidden(error.message);
 		}
-		if (error instanceof UnauthorizedError) {
+		if (error instanceof AuthenticationRequiredError) {
 			return HttpResponse.unauthorized(error.message);
 		}
 

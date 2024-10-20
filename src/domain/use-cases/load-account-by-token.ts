@@ -1,4 +1,4 @@
-import type { Account } from '@/application/entities/account';
+import type { Account } from '@/domain/entities/account';
 
 interface LoadAccountByToken {
 	load(params: LoadAccountByTokenParams): Promise<LoadAccountByTokenResult>;

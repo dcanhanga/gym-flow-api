@@ -1,4 +1,4 @@
-import type { Role } from '../entities/role';
+import type { Role } from '../../domain/entities/role1';
 interface RoleRepository {
 	findByName(roleName: string): Promise<OptionalRoleResponse>;
 	findById(roleId: string): Promise<OptionalRoleResponse>;

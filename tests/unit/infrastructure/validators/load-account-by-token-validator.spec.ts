@@ -1,6 +1,6 @@
 import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { messages } from '@/application/errors/message';
+import { messages } from '@/domain/errors/message';
 
 import { ZodLoadAccountByTokenValidator } from '@/infrastructure/validators/zod/token-validator';
 
@@ -29,7 +29,7 @@ describe('Validator: RegisterRoleValidator - teste unitário', () => {
 				const result = sut.validate({ token });
 				expect(result).toStrictEqual({
 					errors: {
-						token: messages.TOKEN_MUST_BE_A_VALID_STRING,
+						token: messages.MUST_BE_A_VALID_STRING,
 					},
 				});
 			},

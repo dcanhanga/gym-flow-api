@@ -1,8 +1,10 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { ForbiddenError } from '@/application/errors/forbidden';
-import { UnauthorizedError } from '@/application/errors/unauthorized';
-import { LoadAccountByTokenUseCase } from '@/application/use-cases/load-account-by-token';
+import { LoadAccountByTokenService } from '@/application/services/load-account-by-token';
+import {
+	AccessForbiddenError,
+	AuthenticationRequiredError,
+} from '@/domain/errors';
 
 import { StubTokenGenerator } from '../stub/cryptography/generate-token';
 import { StubAccountRepository } from '../stub/repositories/account-repository';
@@ -19,7 +21,7 @@ describe('Caso de uso: LoadAccountByTokenUseCase - teste unitário', () => {
 		const roleRepository = new StubRoleRepository();
 		const tokenGenerator = new StubTokenGenerator();
 		const tokenValidator = new StubTokenValidator();
-		const sut = new LoadAccountByTokenUseCase(
+		const sut = new LoadAccountByTokenService(
 			accountRepository,
 			roleRepository,
 			tokenGenerator,
@@ -40,7 +42,7 @@ describe('Caso de uso: LoadAccountByTokenUseCase - teste unitário', () => {
 	});
 
 	describe('caso de erros', () => {
-		it('deve lançar UnauthorizedError se accessToken não for uma string válida', async () => {
+		it('deve lançar AuthenticationRequiredError se accessToken não for uma string válida', async () => {
 			const { sut, tokenValidator } = setup(['MANAGER']);
 			const tokenError = {
 				errors: {
@@ -48,33 +50,35 @@ describe('Caso de uso: LoadAccountByTokenUseCase - teste unitário', () => {
 				},
 			};
 			vi.spyOn(tokenValidator, 'validate').mockReturnValue(tokenError);
-			await expect(sut.load({ token: '' })).rejects.toThrow(UnauthorizedError);
+			await expect(sut.load({ token: '' })).rejects.toThrow(
+				AuthenticationRequiredError,
+			);
 		});
 
-		it('deve lançar UnauthorizedError se accessToken for inválido', async () => {
+		it('deve lançar AuthenticationRequiredError se accessToken for inválido', async () => {
 			const { sut, tokenGenerator } = setup();
 			vi.spyOn(tokenGenerator, 'verifyToken').mockReturnValue(null);
 			await expect(sut.load({ token: 'invalid_token' })).rejects.toThrow(
-				UnauthorizedError,
+				AuthenticationRequiredError,
 			);
 		});
 
-		it('deve lançar UnauthorizedError se a conta não for encontrada', async () => {
+		it('deve lançar AuthenticationRequiredError se a conta não for encontrada', async () => {
 			const { sut, accountRepository } = setup();
 			vi.spyOn(accountRepository, 'findById').mockResolvedValue(null);
 			await expect(sut.load({ token: 'any_token' })).rejects.toThrow(
-				UnauthorizedError,
+				AuthenticationRequiredError,
 			);
 		});
 
-		it('deve lançar ForbiddenError se o papel da conta não estiver na lista de papéis permitidos', async () => {
+		it('deve lançar AccessForbiddenError se o papel da conta não estiver na lista de papéis permitidos', async () => {
 			const { sut, roleRepository } = setup(['MANAGER', 'ADMIN']);
 			vi.spyOn(roleRepository, 'findById').mockResolvedValue({
 				id: 'admin_role_id',
 				name: 'CLIENT',
 			});
 			await expect(sut.load({ token: 'valid_token' })).rejects.toThrow(
-				ForbiddenError,
+				AccessForbiddenError,
 			);
 		});
 		it('deve propagar um erro se o accountRepository lançar um erro', async () => {

@@ -1,27 +1,27 @@
 import { randomUUID } from 'node:crypto';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { InvalidParamsError } from '@/application/errors/invalid-params';
-import { messages } from '@/application/errors/message';
-import { ResourceAlreadyExistsError } from '@/application/errors/resource-already-exists';
 import type { RoleRepository } from '@/application/repositories/role-repository';
-import { RegisterRoleUseCase } from '@/application/use-cases/register-role';
+import { RegisterRoleService } from '@/application/services/register-role';
 import type { RegisterRoleValidator } from '@/application/validators/interfaces/register-role-validator';
+
+import { InvalidParametersError, ResourceConflictError } from '@/domain/errors';
+import { messages } from '@/domain/errors/message';
 import { StubRoleRepository } from '../stub/repositories/role-repository';
 import { StubRegisterRoleValidator } from '../stub/validators/register-role-validator';
 
 const VALID_ROLES = ['CLIENT', 'ADMIN', 'MANAGER'] as const;
 const INVALID_ROLES = [' ', 'admin', 1, {}];
 
-describe('Caso de uso: RegisterRoleUseCase - teste unitário', () => {
+describe('Caso de uso: RegisterRoleService - teste unitário', () => {
 	let roleRepository: RoleRepository;
 	let registerRoleValidator: RegisterRoleValidator;
-	let sut: RegisterRoleUseCase;
+	let sut: RegisterRoleService;
 
 	function setup() {
 		roleRepository = new StubRoleRepository();
 		registerRoleValidator = new StubRegisterRoleValidator();
-		sut = new RegisterRoleUseCase(roleRepository, registerRoleValidator);
+		sut = new RegisterRoleService(roleRepository, registerRoleValidator);
 	}
 
 	beforeEach(setup);
@@ -40,7 +40,7 @@ describe('Caso de uso: RegisterRoleUseCase - teste unitário', () => {
 				};
 				const roleValidatorSpy = vi.spyOn(registerRoleValidator, 'validate');
 				roleValidatorSpy.mockReturnValue(
-					new InvalidParamsError(
+					new InvalidParametersError(
 						messages.INVALID_INPUT_PARAMETERS,
 						mockValidationResult.errors,
 					),
@@ -51,7 +51,7 @@ describe('Caso de uso: RegisterRoleUseCase - teste unitário', () => {
 				expect(roleValidatorSpy).toBeCalledWith({ name: role });
 				expect(roleValidatorSpy).toHaveBeenCalledTimes(1);
 
-				await expect(result).rejects.toThrow(InvalidParamsError);
+				await expect(result).rejects.toThrow(InvalidParametersError);
 				await expect(result).rejects.toMatchObject({
 					message: messages.INVALID_INPUT_PARAMETERS,
 					errors: mockValidationResult.errors,
@@ -71,7 +71,7 @@ describe('Caso de uso: RegisterRoleUseCase - teste unitário', () => {
 			expect(roleRepositorySpy).toBeCalledWith(VALID_ROLES[0]);
 			expect(roleRepositorySpy).toBeCalledTimes(1);
 			expect(result).rejects.toStrictEqual(
-				new ResourceAlreadyExistsError(messages.THE_ROLE_ALREADY_EXISTS),
+				new ResourceConflictError(messages.ROLE_ALREADY_EXISTS),
 			);
 		});
 		it('deve lançar um erro não previsto quando ocorrer uma exceção inesperada', async () => {

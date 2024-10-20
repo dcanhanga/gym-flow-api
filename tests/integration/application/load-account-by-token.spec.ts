@@ -1,17 +1,19 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { ForbiddenError } from '@/application/errors/forbidden';
-import { messages } from '@/application/errors/message';
-import { UnauthorizedError } from '@/application/errors/unauthorized';
-import { LoadAccountByTokenUseCase } from '@/application/use-cases/load-account-by-token';
+import { LoadAccountByTokenService } from '@/application/services/load-account-by-token';
+import {
+	AccessForbiddenError,
+	AuthenticationRequiredError,
+} from '@/domain/errors';
+import { messages } from '@/domain/errors/message';
 import { JWTAdapter } from '@/infrastructure/auth/jwt-adapter';
 import { ZodLoadAccountByTokenValidator } from '@/infrastructure/validators/zod/token-validator';
 import { InMemoryAccountRepository } from '../in-memory-repository/account-repository';
 import { InMemoryRoleRepository } from '../in-memory-repository/role-repository';
 
-describe('LoadAccountByTokenUseCase - teste de integração', () => {
+describe('LoadAccountByTokenService - teste de integração', () => {
 	type InitTypes = {
-		sut: LoadAccountByTokenUseCase;
+		sut: LoadAccountByTokenService;
 		roleRepository: InMemoryRoleRepository;
 		accountRepository: InMemoryAccountRepository;
 		tokenGenerator: JWTAdapter;
@@ -24,7 +26,7 @@ describe('LoadAccountByTokenUseCase - teste de integração', () => {
 			'LoadAccountByTokenUseCase - teste de integração',
 		);
 		const tokenValidator = new ZodLoadAccountByTokenValidator();
-		const sut = new LoadAccountByTokenUseCase(
+		const sut = new LoadAccountByTokenService(
 			accountRepository,
 			roleRepository,
 			tokenGenerator,
@@ -47,7 +49,7 @@ describe('LoadAccountByTokenUseCase - teste de integração', () => {
 		it('lançar erro se o token for invalido ', async () => {
 			const { sut } = setup;
 			await expect(sut.load({ token: '' })).rejects.toStrictEqual(
-				new UnauthorizedError(messages.ACESSES_DENIED),
+				new AuthenticationRequiredError(messages.ACESSES_DENIED),
 			);
 		});
 
@@ -56,7 +58,7 @@ describe('LoadAccountByTokenUseCase - teste de integração', () => {
 				'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
 			const { sut } = setup;
 			await expect(sut.load({ token })).rejects.toStrictEqual(
-				new UnauthorizedError(messages.ACESSES_DENIED),
+				new AuthenticationRequiredError(messages.ACESSES_DENIED),
 			);
 		});
 
@@ -69,7 +71,7 @@ describe('LoadAccountByTokenUseCase - teste de integração', () => {
 				'15m',
 			);
 			await expect(sut.load({ token })).rejects.toStrictEqual(
-				new UnauthorizedError(messages.ACESSES_DENIED),
+				new AuthenticationRequiredError(messages.ACESSES_DENIED),
 			);
 		});
 
@@ -85,7 +87,7 @@ describe('LoadAccountByTokenUseCase - teste de integração', () => {
 			});
 			const token = tokenGenerator.generateToken({ userId: account.id }, '15m');
 			await expect(sut.load({ token })).rejects.toStrictEqual(
-				new ForbiddenError(messages.ACESSES_DENIED),
+				new AccessForbiddenError(messages.ACESSES_DENIED),
 			);
 		});
 	});
