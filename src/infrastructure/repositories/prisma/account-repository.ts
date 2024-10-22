@@ -3,8 +3,8 @@ import type {
 	AccountRepository,
 	NewAccountResponse,
 	OptionalAccountResponse,
-} from '@/application/repositories/account-repository';
-import { prisma } from '.';
+} from '@/domain/repositories/account';
+import { prisma } from './config';
 class PrismaAccountRepository implements AccountRepository {
 	async findById(accountId: string): Promise<OptionalAccountResponse> {
 		const account = await prisma.account.findUnique({

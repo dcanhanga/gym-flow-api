@@ -1,3 +1,6 @@
+type ErrorResponse = {
+	errors: Record<string, string>;
+};
 class AccessForbiddenError extends Error {
 	constructor(message: string) {
 		super(message);
@@ -55,10 +58,6 @@ export {
 	ResourceNotFoundError,
 	AuthenticationRequiredError,
 	NoChangesError,
+	type ErrorResponse,
 };
-
-const aaa = new InvalidParametersError('message', {
-	field: 'message',
-});
-
-console.log(aaa);
+export { messages, formatExpectedTypeMismatch } from './message';

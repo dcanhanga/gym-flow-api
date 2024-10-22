@@ -1,12 +1,11 @@
+import cookie, { type FastifyCookieOptions } from '@fastify/cookie';
 import Fastify from 'fastify';
 
-import cookie, { type FastifyCookieOptions } from '@fastify/cookie';
-import { setupRoutes } from './routes-config.js';
+import { setupRoutes } from './routes-config';
 
 export const app = Fastify();
 app.register(cookie, {
-	secret: 'my-secret', // for cookies signature
-	parseOptions: {}, // options for parsing cookies
+	secret: 'my-secret',
 } as FastifyCookieOptions);
 app.ready(() => {
 	app.hasPlugin('@fastify/cookie'); // true

@@ -1,4 +1,4 @@
-import { prisma } from '@/infrastructure/repositories/prisma';
+import { prisma } from '@/infrastructure/repositories/prisma/config';
 import { env } from './config/env';
 import { app } from './config/fastify';
 

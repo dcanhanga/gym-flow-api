@@ -1,11 +1,11 @@
+import type {
+	Params,
+	RegisterRole,
+} from '@/application/use-cases/role/protocols/register';
 import {
 	InvalidParametersError,
 	ResourceConflictError,
 } from '@/domain/errors/';
-import type {
-	RegisterRole,
-	RegisterRoleParams,
-} from '@/domain/use-cases/register-role';
 import { HttpResponse } from '../helpers/http-response';
 import type { ApiResponse } from '../helpers/interface/api-response';
 import { messages } from '../helpers/messages';
@@ -41,7 +41,7 @@ class RegisterRoleController
 	}
 }
 namespace RegisterRoleController {
-	export type Request = RegisterRoleParams;
+	export type Request = Params;
 	export type Response = null;
 }
 

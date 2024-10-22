@@ -2,9 +2,10 @@ import { describe, expect, it } from 'vitest';
 
 import { Role, ValidRoles } from '@/domain/entities/role';
 import { InvalidParametersError, NoChangesError } from '@/domain/errors';
-import { zodRoleValidator } from '@/infrastructure/validators/zod/role';
+import { ZodRoleValidator } from '@/infrastructure/validators/zod/role';
 
 describe('Role - entidade', () => {
+	const zodRoleValidator = new ZodRoleValidator();
 	const VALID_ROLES = ['ADMIN', 'MANAGER', 'CLIENT'] as const;
 	it.each(VALID_ROLES)('deve criar um role válido com %s', (role) => {
 		expect(

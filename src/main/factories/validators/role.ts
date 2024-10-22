@@ -1,9 +1,9 @@
-import { ZodRegisterRoleValidator } from '@/infrastructure/validators/zod/register-role-validator';
+import { ZodRoleValidator } from '@/infrastructure/validators/zod/role';
 
-function registerRoleValidatorFactory() {
-	return new ZodRegisterRoleValidator();
+function roleValidatorFactory() {
+	return new ZodRoleValidator();
 }
 
 export const validator = {
-	register: registerRoleValidatorFactory(),
+	role: roleValidatorFactory(),
 };

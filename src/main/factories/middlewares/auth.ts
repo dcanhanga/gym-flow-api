@@ -1,5 +1,5 @@
 import { AuthMiddleware } from '@/presentation/middlewares/auth';
-import { account } from '../services/account';
+import { account } from '../use-cases/account';
 
 export const authMiddleware = {
 	admin: new AuthMiddleware(account.loadByToken(['ADMIN', 'MANAGER'])),

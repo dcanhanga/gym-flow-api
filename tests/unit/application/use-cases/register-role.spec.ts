@@ -1,107 +1,80 @@
-import { randomUUID } from 'node:crypto';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import type { RoleRepository } from '@/application/repositories/role-repository';
-import { RegisterRoleService } from '@/application/services/register-role';
-import type { RegisterRoleValidator } from '@/application/validators/interfaces/register-role-validator';
-
+import { RegisterRoleUseCase } from '@/application/use-cases/role/register-role';
 import { InvalidParametersError, ResourceConflictError } from '@/domain/errors';
-import { messages } from '@/domain/errors/message';
-import { StubRoleRepository } from '../stub/repositories/role-repository';
-import { StubRegisterRoleValidator } from '../stub/validators/register-role-validator';
+import { ZodRoleValidator } from '@/infrastructure/validators/zod/role';
+import { InMemoryRoleRepository } from '@/tests/in-memory-repository/role-repository';
 
 const VALID_ROLES = ['CLIENT', 'ADMIN', 'MANAGER'] as const;
 const INVALID_ROLES = [' ', 'admin', 1, {}];
 
-describe('Caso de uso: RegisterRoleService - teste unitário', () => {
-	let roleRepository: RoleRepository;
-	let registerRoleValidator: RegisterRoleValidator;
-	let sut: RegisterRoleService;
+describe('RegisterRoleUseCase - Unit Test', () => {
+	type TestSetup = {
+		roleRepository: InMemoryRoleRepository;
+		roleValidator: ZodRoleValidator;
+		sut: RegisterRoleUseCase;
+	};
 
-	function setup() {
-		roleRepository = new StubRoleRepository();
-		registerRoleValidator = new StubRegisterRoleValidator();
-		sut = new RegisterRoleService(roleRepository, registerRoleValidator);
+	function createTestSetup(): TestSetup {
+		const roleRepository = new InMemoryRoleRepository();
+		const roleValidator = new ZodRoleValidator();
+		const sut = new RegisterRoleUseCase(roleRepository, roleValidator);
+
+		return {
+			roleRepository,
+			roleValidator,
+			sut,
+		};
 	}
 
-	beforeEach(setup);
+	let setup: TestSetup;
+
+	beforeEach(() => {
+		setup = createTestSetup();
+	});
+
 	afterEach(() => {
 		vi.clearAllMocks();
 	});
-
-	describe('Casos de erro', () => {
+	describe('Caso de erros', () => {
 		it.each(INVALID_ROLES)(
-			'deve lançar InvalidParams quando o nome do papel fornecido for inválido (%s)',
+			'deve lançar um erro InvalidParams quando role for invalido',
 			async (role) => {
-				const mockValidationResult = {
-					errors: {
-						role: messages.ROLE_MUST_BE_MANAGER_ADMIN_OR_USER,
-					},
-				};
-				const roleValidatorSpy = vi.spyOn(registerRoleValidator, 'validate');
-				roleValidatorSpy.mockReturnValue(
-					new InvalidParametersError(
-						messages.INVALID_INPUT_PARAMETERS,
-						mockValidationResult.errors,
-					),
-				);
-				// @ts-ignore - Ignorando verificação de tipo para testar cenário de parâmetro inválido
-				const result = sut.register({ name: role });
-
-				expect(roleValidatorSpy).toBeCalledWith({ name: role });
-				expect(roleValidatorSpy).toHaveBeenCalledTimes(1);
-
-				await expect(result).rejects.toThrow(InvalidParametersError);
-				await expect(result).rejects.toMatchObject({
-					message: messages.INVALID_INPUT_PARAMETERS,
-					errors: mockValidationResult.errors,
-				});
+				const params = { name: role };
+				await expect(
+					//@ts-ignore - para testar o erro de parâmetros inválidos
+					setup.sut.register({ name: params.name }),
+				).rejects.toThrow(InvalidParametersError);
 			},
 		);
-
-		it('deve lançar ResourceAlreadyExists quando um papel com o mesmo nome já está cadastrado', async () => {
-			const mockRole = {
-				id: '1',
-				name: VALID_ROLES[0],
-			};
-			const roleRepositorySpy = vi.spyOn(roleRepository, 'findByName');
-			roleRepositorySpy.mockResolvedValue(mockRole);
-			const result = sut.register({ name: VALID_ROLES[0] });
-
-			expect(roleRepositorySpy).toBeCalledWith(VALID_ROLES[0]);
-			expect(roleRepositorySpy).toBeCalledTimes(1);
-			expect(result).rejects.toStrictEqual(
-				new ResourceConflictError(messages.ROLE_ALREADY_EXISTS),
+		it('deve lançar um erro ResourceAlreadyExists quando role já existe', async () => {
+			const { sut } = setup;
+			const params = { name: 'ADMIN' } as const;
+			await sut.register(params);
+			await expect(setup.sut.register(params)).rejects.toThrow(
+				ResourceConflictError,
 			);
 		});
 		it('deve lançar um erro não previsto quando ocorrer uma exceção inesperada', async () => {
-			// @ts-ignore - Passando null para forçar um erro inesperado
-			const roleRepositorySpy = vi.spyOn(roleRepository, 'findByName');
+			const roleRepositorySpy = vi.spyOn(setup.roleRepository, 'findByName');
 			roleRepositorySpy.mockImplementation(() => {
 				throw new Error();
 			});
 
 			await expect(
-				sut.register({ name: VALID_ROLES[0] }),
-			).rejects.toStrictEqual(new Error());
+				setup.sut.register({ name: VALID_ROLES[0] }),
+			).rejects.toThrow(Error);
 		});
 	});
 
-	describe('Casos de sucesso', () => {
+	describe('caso de sucesso', () => {
 		it.each(VALID_ROLES)(
-			'deve registrar um papel: "%s" com sucesso',
-			async (role) => {
-				const roleToSave = {
-					id: randomUUID(),
-					name: role,
-				};
-				const roleRepositorySpy = vi.spyOn(roleRepository, 'register');
-				roleRepositorySpy.mockResolvedValue(roleToSave);
-				const params = { name: role };
-
-				const result = await sut.register(params);
-				expect(roleRepositorySpy).toBeCalledWith(role);
-				expect(result).toStrictEqual(roleToSave);
+			'should register a valid role without errors (%s)',
+			async (validRole) => {
+				const params = { name: validRole };
+				await expect(
+					setup.sut.register({ name: params.name }),
+				).resolves.toBeUndefined();
 			},
 		);
 	});

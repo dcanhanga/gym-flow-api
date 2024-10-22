@@ -1,2 +1,2 @@
 export * from './protocols';
-export * from './role';
+export * from './account';

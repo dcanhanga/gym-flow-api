@@ -1,8 +1,7 @@
 import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { messages } from '@/domain/errors/message';
-
-import { ZodLoadAccountByTokenValidator } from '@/infrastructure/validators/zod/token-validator';
+import { AuthenticationRequiredError } from '@/domain/errors';
+import { ZodLoadAccountByTokenValidator } from '@/infrastructure/validators/zod/load-account-by-token-validator';
 
 const VALID_TOKEN =
 	'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
@@ -21,17 +20,13 @@ describe('Validator: RegisterRoleValidator - teste unitário', () => {
 
 	describe('Casos de erro', () => {
 		it.each(INVALID_TOKEN)(
-			'deve retornar o erro TOKEN_MUST_BE_A_VALID_STRING quando o token é um jwt inválido',
+			'deve retornar erro quando o token for invalido',
 			(token) => {
 				const { sut } = setup();
 				//@ts-ignore - Ignorando verificação de tipo para testar cenário de parâmetro inválido
-
-				const result = sut.validate({ token });
-				expect(result).toStrictEqual({
-					errors: {
-						token: messages.MUST_BE_A_VALID_STRING,
-					},
-				});
+				expect(() => sut.validate({ token })).throw(
+					AuthenticationRequiredError,
+				);
 			},
 		);
 
@@ -40,21 +35,18 @@ describe('Validator: RegisterRoleValidator - teste unitário', () => {
 			(input) => {
 				const { sut } = setup();
 				//@ts-ignore - Ignorando verificação de tipo para testar cenário de parâmetro inválido
-				const result = sut.validate(input);
-
-				expect(result?.errors).toHaveProperty('invalidType');
+				expect(() => sut.validate(input)).throw(AuthenticationRequiredError);
 			},
 		);
 
 		it('deve propagar o erro se o zod lançar um erro interno', () => {
 			const mockZodError = new Error('Erro interno do Zod');
 			const { sut } = setup();
-			vi
-				// biome-ignore lint/complexity/useLiteralKeys: <explanation>
-				.spyOn(sut['loadAccountByTokenSchema'], 'safeParse')
-				.mockImplementation(() => {
+			vi.spyOn(sut['loadAccountByTokenSchema'], 'safeParse').mockImplementation(
+				() => {
 					throw mockZodError;
-				});
+				},
+			);
 			expect(() => {
 				sut.validate({ token: VALID_TOKEN });
 			}).toThrow(mockZodError);
@@ -66,7 +58,7 @@ describe('Validator: RegisterRoleValidator - teste unitário', () => {
 			const { sut } = setup();
 			const result = sut.validate({ token: VALID_TOKEN });
 
-			expect(result).toBeNull();
+			expect(result).toEqual({ token: VALID_TOKEN });
 		});
 	});
 });

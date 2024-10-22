@@ -1,7 +1,8 @@
-import { messages } from '@/domain/errors/message';
-import { app } from '@/main/config/fastify';
 import request from 'supertest';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+
+import { messages } from '@/domain/errors/message';
+import { app } from '@/main/config/fastify';
 
 describe('API: RegisterRole', () => {
 	beforeAll(async () => {
@@ -11,7 +12,7 @@ describe('API: RegisterRole', () => {
 		await app.close();
 	});
 	const baseUrl = 'api/roles';
-	describe('POST /register-role', () => {
+	describe('register-role', () => {
 		it('deve retornar 401 quando o usuário nao tiver autenticado', async () => {
 			const response = await request(app.server).post(`/${baseUrl}`).send({
 				name: 'USER',

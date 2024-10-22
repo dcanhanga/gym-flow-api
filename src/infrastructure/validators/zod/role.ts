@@ -1,37 +1,50 @@
-import type {
-	ErrorResponse,
-	RoleParams,
-	Validator,
-} from '@/domain/entities/role/validator';
-import { messages } from '@/domain/errors/message';
+import type { RoleResponse, Validator } from '@/domain/entities/role';
+import { InvalidParametersError, messages } from '@/domain/errors';
 import z from 'zod';
 import { ErrorFormatter, roleNameValidator, uuidValidator } from './utils';
 
 class ZodRoleValidator implements Validator {
-	private roleSchema: z.ZodSchema;
-
-	constructor() {
-		this.roleSchema = z
+	private parseCreate(params: Record<string, unknown>) {
+		return z
 			.object({
 				id: uuidValidator.optional(),
 				name: roleNameValidator,
 			})
-			.strict({ message: messages.UNRECOGNIZED_FIELD });
+			.strict({ message: messages.UNRECOGNIZED_FIELD })
+			.safeParse(params);
 	}
 
-	validate(data: Record<string, unknown>): RoleParams | ErrorResponse {
-		const result = this.safeParse(data);
+	private parseUpdate(params: Record<string, unknown>) {
+		return z
+			.object({
+				name: roleNameValidator,
+			})
+			.strict({ message: messages.UNRECOGNIZED_FIELD })
+			.safeParse(params);
+	}
+
+	validateCreate(params: Record<string, unknown>): RoleResponse {
+		const result = this.parseCreate(params);
 		if (!result.success) {
-			return ErrorFormatter.format(result.error.issues);
+			const errors = ErrorFormatter.format(result.error.issues);
+			throw new InvalidParametersError(
+				messages.INVALID_INPUT_PARAMETERS,
+				errors,
+			);
 		}
 		return result.data;
 	}
-
-	private safeParse(data: Record<string, unknown>) {
-		return this.roleSchema.safeParse(data);
+	validateUpdate(params: Record<string, unknown>) {
+		const result = this.parseUpdate(params);
+		if (!result.success) {
+			const errors = ErrorFormatter.format(result.error.issues);
+			throw new InvalidParametersError(
+				messages.INVALID_INPUT_PARAMETERS,
+				errors,
+			);
+		}
+		return result.data;
 	}
 }
 
-const zodRoleValidator = new ZodRoleValidator();
-
-export { zodRoleValidator };
+export { ZodRoleValidator };

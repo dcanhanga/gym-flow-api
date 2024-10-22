@@ -1,11 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import type { RegisterRole } from '@/application/use-cases/role/protocols/register';
 import { InvalidParametersError, ResourceConflictError } from '@/domain/errors';
 import { messages } from '@/domain/errors/message';
-import type { RegisterRole } from '@/domain/use-cases/register-role';
 import { RegisterRoleController } from '@/presentation/controllers/register-role';
 import { messages as controllerMessage } from '@/presentation/helpers/messages';
-import { StubRegisterRoleService } from './controllers/stubs/register-role';
+import { StubRegisterRoleUseCase } from './controllers/stubs/register-role';
 
 const VALID_ROLES = ['ADMIN', 'CLIENT', 'MANAGER'] as const;
 
@@ -14,7 +14,7 @@ describe('RegisterRoleController - teste unitário', () => {
 	let sut: RegisterRoleController;
 
 	function setup() {
-		registerRoleUseCaseStub = new StubRegisterRoleService();
+		registerRoleUseCaseStub = new StubRegisterRoleUseCase();
 		sut = new RegisterRoleController(registerRoleUseCaseStub);
 	}
 

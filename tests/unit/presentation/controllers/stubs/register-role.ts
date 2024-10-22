@@ -1,17 +1,11 @@
-import { randomUUID } from 'node:crypto';
-
 import type {
+	Params,
 	RegisterRole,
-	RegisterRoleParams,
-	RegisterRoleResult,
-} from '@/domain/use-cases/register-role';
+} from '@/application/use-cases/role/protocols/register';
 
-class StubRegisterRoleService implements RegisterRole {
-	async register(params: RegisterRoleParams): Promise<RegisterRoleResult> {
-		return {
-			id: randomUUID(),
-			name: params.name,
-		};
+class StubRegisterRoleUseCase implements RegisterRole {
+	async register(_params: Params): Promise<void> {
+		return;
 	}
 }
-export { StubRegisterRoleService };
+export { StubRegisterRoleUseCase };
