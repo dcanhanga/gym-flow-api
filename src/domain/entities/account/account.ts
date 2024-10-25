@@ -1,48 +1,62 @@
-import type { CreateAccountDto } from '@/domain/dto/account';
-import { InvalidParametersError, NoChangesError } from '@/domain/errors';
-import { messages } from '@/domain/errors/message';
-import { ZodAccountValidator } from '@/infrastructure/validators/zod/account';
-import type {
-	NewParams,
-	OldParams,
-	Params,
-	UpdateParams,
-	Validator,
-} from './protocols';
+import type { RoleDto } from '@/domain/dto/role';
+import { AccountPermissionService } from './services/account-permission';
+import { Email } from './vo/email';
+import { Name } from './vo/name';
+import { Password } from './vo/password';
+import { Url } from './vo/url';
+import { UUID } from './vo/uuid';
+type Input = {
+	email: string;
+	name: string;
+	password: string;
+	avatarUrl: string | null;
+	role: RoleDto;
+	isManager: boolean;
+};
 
 class Account {
-	private constructor(private readonly params: Params) {
+	private password: Password;
+	private email: Email;
+	private name: Name;
+	private roleId: UUID;
+	private id: UUID;
+	private avatarUrl: Url;
+
+	private constructor(input: Input) {
+		this.email = new Email(input.email);
+		this.name = new Name(input.name);
+		this.id = new UUID();
+		this.roleId = new UUID(input.role.id);
+		this.password = new Password(input.password);
+		this.avatarUrl = new Url(input.avatarUrl);
 		Object.freeze(this);
 	}
 
 	getName() {
-		return this.params.name;
+		return this.name.getValue();
 	}
 	getEmail() {
-		return this.params.email;
+		return this.email.getValue();
 	}
 	getPassword() {
-		return this.params.password;
+		return this.password.getValue();
 	}
 	getRoleId() {
-		return this.params.roleId;
+		return this.roleId.getValue();
 	}
 	getAvatarUrl() {
-		return this.params.avatarUrl;
+		return this.avatarUrl.getValue();
 	}
 	getId() {
-		return this.params.id;
+		return this.id.getValue();
+	}
+	getUrl() {
+		return this.avatarUrl.getValue();
 	}
 
-	static create(createParams: CreateAccountDto, validator: Validator): Account {
-		const { roleId, ...accountDataToValidate } = createParams;
-		validator.roleId(roleId);
-		const result = validator.create(accountDataToValidate);
-		return Account.generateAccount({ ...result, avatarUrl: null, roleId });
-	}
-
-	private static generateAccount(params: Params) {
-		return new Account(params);
+	static create(input: Input): Account {
+		AccountPermissionService.validate(input.role, input.isManager);
+		return new Account(input);
 	}
 }
 export { Account };

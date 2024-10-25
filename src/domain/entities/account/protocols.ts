@@ -1,6 +1,6 @@
 import type {
-	CreateAccountDto,
 	CreateAccountValidationResultDto,
+	RegisterAccountDto,
 } from '@/domain/dto/account';
 
 type Params = {
@@ -24,7 +24,7 @@ type UpdateParams = {
 
 interface Validator {
 	create(
-		params: Omit<CreateAccountDto, 'roleId'>,
+		params: Omit<RegisterAccountDto, 'roleId'>,
 	): CreateAccountValidationResultDto;
 	roleId(roleId: string): string;
 	// update(params: Record<string, unknown>): NewParams;

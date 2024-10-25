@@ -1,15 +1,11 @@
-import type { AccountDto } from '../dto/account';
+import type { AccountDto, RegisterAccountDto } from '../dto/account';
 
 interface AccountRepository {
 	findById(accountId: string): Promise<OptionalAccountResponse>;
-	register(account: AccountInput): Promise<NewAccountResponse>;
+	findByEmail(email: string): Promise<OptionalAccountResponse>;
+	register(account: RegisterAccountDto): Promise<AccountDto>;
 }
-type NewAccountResponse = AccountDto;
+
 type AccountInput = Omit<AccountDto, 'id' | 'role' | 'avatarUrl'>;
 type OptionalAccountResponse = AccountDto | null;
-export type {
-	AccountRepository,
-	NewAccountResponse,
-	AccountInput,
-	OptionalAccountResponse,
-};
+export type { AccountRepository, AccountInput, OptionalAccountResponse };

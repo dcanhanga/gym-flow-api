@@ -26,7 +26,7 @@ class ZodAccountValidator implements Validator {
 			.safeParse(params);
 	}
 	roleId(roleId: string): string {
-		const result = z.string().uuid().safeParse(roleId);
+		const result = z.string().url().safeParse(roleId);
 		if (!result.success) {
 			throw new Error('ID provided by database is invalid uuid');
 		}
