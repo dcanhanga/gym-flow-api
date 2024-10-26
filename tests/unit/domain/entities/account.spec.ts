@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
 
 import { Account } from '@/domain/entities';
+import { ValidRoles } from '@/domain/entities/role';
 import { DomainError } from '@/domain/errors';
 
 describe('Account - Entidade', () => {
@@ -12,7 +13,7 @@ describe('Account - Entidade', () => {
 		isManager: false,
 		role: {
 			id: randomUUID(),
-			name: 'CLIENT',
+			name: ValidRoles.Client,
 		},
 	};
 
@@ -28,7 +29,7 @@ describe('Account - Entidade', () => {
 				isManager: true,
 				role: {
 					id: randomUUID(),
-					name: 'ADMIN',
+					name: ValidRoles.Admin,
 				},
 			};
 			const adminAccount = Account.create(adminAccountInput);
@@ -96,7 +97,7 @@ describe('Account - Entidade', () => {
 				isManager: false,
 				role: {
 					id: randomUUID(),
-					name: 'MANAGER',
+					name: ValidRoles.Manager,
 				},
 			};
 			expect(() => Account.create(unauthorizedRoleInput)).toThrowError(

@@ -6,7 +6,7 @@ export class AccountPermissionService {
 	public static validate({ isManager, role }: Params): void {
 		if (
 			!isManager &&
-			[ValidRoles.ADMIN, ValidRoles.MANAGER].includes(role.name as ValidRoles)
+			[ValidRoles.Admin, ValidRoles.Manager].includes(role.name as ValidRoles)
 		) {
 			throw new DomainError(messages.ROLE_MANAGER_PERMISSION_REQUIRED);
 		}

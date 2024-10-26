@@ -4,6 +4,7 @@ import { AccountPermissionService } from '@/domain/services/account-permission';
 import { Email, Name, Password, UUID, Url } from '@/domain/vo';
 
 type Input = {
+	id?: string;
 	email: string;
 	name: string;
 	password: string;
@@ -23,7 +24,7 @@ class Account {
 	private constructor(input: Input) {
 		this.email = new Email(input.email);
 		this.name = new Name(input.name);
-		this.id = new UUID();
+		this.id = new UUID(input.id);
 		this.roleId = new UUID(input.role.id);
 		this.password = new Password(input.password);
 		this.avatarUrl = new Url(input.avatarUrl);

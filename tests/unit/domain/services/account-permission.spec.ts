@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { describe, expect, test } from 'vitest';
 
+import { ValidRoles } from '@/domain/entities/role';
 import { DomainError, messages } from '@/domain/errors';
 import { AccountPermissionService } from '@/domain/services/account-permission';
 
@@ -8,7 +9,7 @@ describe('AccountPermissionService', () => {
 	test('deve lançar um erro quando o role não for manager e o nome do role for ADMIN', () => {
 		expect(() =>
 			AccountPermissionService.validate({
-				role: { id: randomUUID(), name: 'ADMIN' },
+				role: { id: randomUUID(), name: ValidRoles.Admin },
 				isManager: false,
 			}),
 		).toThrow(new DomainError(messages.ROLE_MANAGER_PERMISSION_REQUIRED));
@@ -17,7 +18,7 @@ describe('AccountPermissionService', () => {
 	test('deve lançar um erro quando o role não for manager e o nome do role for MANAGER', () => {
 		expect(() =>
 			AccountPermissionService.validate({
-				role: { id: randomUUID(), name: 'MANAGER' },
+				role: { id: randomUUID(), name: ValidRoles.Manager },
 				isManager: false,
 			}),
 		).toThrow(new DomainError(messages.ROLE_MANAGER_PERMISSION_REQUIRED));

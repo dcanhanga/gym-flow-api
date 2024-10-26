@@ -1,51 +1,39 @@
-// import { NoChangesError } from '@/domain/errors';
-// import { messages } from '@/domain/errors/message';
-// import type { Params, UpdateParams, ValidRoles, Validator } from './protocols';
-// import { RoleUtils } from './utils';
+import { DomainError, messages } from '@/domain/errors';
+import { UUID } from '@/domain/vo';
+import { RoleName } from '@/domain/vo/role-name';
+import type { ValidRoles } from './protocols';
 
-// class Role {
-// 	private constructor(private readonly params: Params) {
-// 		Object.freeze(this);
-// 	}
+type Input = {
+	name: keyof typeof ValidRoles;
+	id?: string;
+	isManager: boolean;
+};
 
-// 	getName(): ValidRoles {
-// 		RoleUtils.validateRoleName(this.params.name);
-// 		return this.params.name as ValidRoles;
-// 	}
+export class Role {
+	private name: RoleName;
+	private id: UUID;
 
-// 	getId() {
-// 		return this.params.id;
-// 	}
+	private constructor(input: Input) {
+		this.validateManagerPermission(input.isManager);
+		this.id = new UUID(input.id);
+		this.name = new RoleName(input.name);
+		Object.freeze(this);
+	}
 
-// 	static create(createParams: Params, validator: Validator): Role {
-// 		const result = validator.validateCreate(createParams);
-// 		return Role.generateRole(result);
-// 	}
+	getName() {
+		return this.name.getValue();
+	}
+	getId() {
+		return this.id.getValue();
+	}
 
-// 	static update(updateParams: UpdateParams, validator: Validator): Role {
-// 		const { newRole, oldRole } = updateParams;
-// 		const updates: Partial<Params> = {};
-// 		const result = validator.validateUpdate(newRole);
-// 		const ignoredKeys = new Set(['id']);
-// 		const hasChanges = RoleUtils.processUpdates(
-// 			oldRole,
-// 			result,
-// 			updates,
-// 			ignoredKeys,
-// 		);
+	private validateManagerPermission(isManager: boolean) {
+		if (!isManager) {
+			throw new DomainError(messages.ROLE_MANAGER_PERMISSION_REQUIRED);
+		}
+	}
 
-// 		if (!hasChanges) {
-// 			throw new NoChangesError(messages.THERE_ARE_NOT_ENOUGH_CHANGES_TO_UPDATE);
-// 		}
-
-// 		return Role.generateRole({ name: result.name, id: oldRole.id });
-// 	}
-
-// 	private static generateRole(params: Params) {
-// 		return new Role({
-// 			name: params.name,
-// 			id: params.id,
-// 		});
-// 	}
-// }
-// export { Role, type ValidRoles };
+	static create(input: Input): Role {
+		return new Role(input);
+	}
+}
