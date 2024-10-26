@@ -1,6 +1,4 @@
-type RoleDto = {
+export type RoleDto = {
 	id: string;
 	name: string;
 };
-
-export type { RoleDto };

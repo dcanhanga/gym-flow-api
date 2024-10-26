@@ -1,6 +1,6 @@
 import type { RoleDto } from './role';
 
-type AccountDto = {
+export type AccountDto = {
 	id: string;
 	name: string;
 	email: string;
@@ -8,20 +8,17 @@ type AccountDto = {
 	avatarUrl: string | null;
 	roleId: string;
 };
-type RegisterAccountDto = {
+
+export type CreateAccountDto = {
 	name: string;
 	email: string;
 	password: string;
-	roleId: string;
-};
-type CreateAccountValidationResultDto = {
-	name: string;
-	email: string;
-	password: string;
+	role: RoleDto;
+	isManager: boolean;
 };
 
-export type {
-	AccountDto,
-	RegisterAccountDto,
-	CreateAccountValidationResultDto,
-};
+// type AccountValidationResultDto = {
+// 	name: string;
+// 	email: string;
+// 	password: string;
+// };

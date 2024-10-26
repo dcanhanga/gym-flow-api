@@ -1,10 +1,8 @@
+import type { CreateAccountDto } from '@/domain/dto/account';
 import type { RoleDto } from '@/domain/dto/role';
-import { AccountPermissionService } from './services/account-permission';
-import { Email } from './vo/email';
-import { Name } from './vo/name';
-import { Password } from './vo/password';
-import { Url } from './vo/url';
-import { UUID } from './vo/uuid';
+import { AccountPermissionService } from '@/domain/services/account-permission';
+import { Email, Name, Password, UUID, Url } from '@/domain/vo';
+
 type Input = {
 	email: string;
 	name: string;
@@ -54,9 +52,10 @@ class Account {
 		return this.avatarUrl.getValue();
 	}
 
-	static create(input: Input): Account {
-		AccountPermissionService.validate(input.role, input.isManager);
-		return new Account(input);
+	static create(input: CreateAccountDto): Account {
+		const { role, isManager } = input;
+		AccountPermissionService.validate({ isManager, role });
+		return new Account({ ...input, avatarUrl: null });
 	}
 }
 export { Account };
