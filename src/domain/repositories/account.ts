@@ -1,11 +1,12 @@
-// import type { AccountDto, RegisterAccountDto } from '../dto/account';
+import type {
+	AccountDto,
+	AccountRegistrationDto,
+	AccountWithRoleDto,
+} from '../dto/account';
 
-// interface AccountRepository {
-// 	findById(accountId: string): Promise<OptionalAccountResponse>;
-// 	findByEmail(email: string): Promise<OptionalAccountResponse>;
-// 	register(account: RegisterAccountDto): Promise<AccountDto>;
-// }
-
-// type AccountInput = Omit<AccountDto, 'id' | 'role' | 'avatarUrl'>;
-// type OptionalAccountResponse = AccountDto | null;
-// export type { AccountRepository, AccountInput, OptionalAccountResponse };
+export interface AccountRepository {
+	findById(accountId: string): Promise<AccountDto | null>;
+	findByEmail(email: string): Promise<AccountDto | null>;
+	findWithRole(accountId: string): Promise<AccountWithRoleDto | null>;
+	register(account: AccountRegistrationDto): Promise<AccountDto>;
+}

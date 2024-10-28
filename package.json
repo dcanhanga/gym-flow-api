@@ -29,7 +29,11 @@
 		"test:e2e": "vitest run tests/e2e",
 		"test:e2e:watch": "vitest tests/e2e"
 	},
-	"keywords": ["Api rest", "Solid", "typescript"],
+	"keywords": [
+		"Api rest",
+		"Solid",
+		"typescript"
+	],
 	"author": "Domingos Canhanga",
 	"license": "ISC",
 	"dependencies": {
@@ -62,6 +66,7 @@
 		"tsx": "4.19.1",
 		"typescript": "5.6.2",
 		"vite-tsconfig-paths": "5.0.1",
-		"vitest": "2.1.1"
+		"vitest": "2.1.1",
+		"vitest-mock-extended": "2.0.2"
 	}
 }

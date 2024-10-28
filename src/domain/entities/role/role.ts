@@ -1,22 +1,15 @@
 import { DomainError, messages } from '@/domain/errors';
 import { UUID } from '@/domain/vo';
 import { RoleName } from '@/domain/vo/role-name';
-import type { ValidRoles } from './protocols';
-
-type Input = {
-	name: keyof typeof ValidRoles;
-	id?: string;
-	isManager: boolean;
-};
 
 export class Role {
-	private name: RoleName;
-	private id: UUID;
+	private readonly name: RoleName;
+	private readonly id: UUID;
 
-	private constructor(input: Input) {
-		this.validateManagerPermission(input.isManager);
-		this.id = new UUID(input.id);
-		this.name = new RoleName(input.name);
+	private constructor(params: Role.Params) {
+		this.validateManagerPermission(params.isManager);
+		this.id = new UUID(params.id);
+		this.name = new RoleName(params.name);
 		Object.freeze(this);
 	}
 
@@ -27,13 +20,25 @@ export class Role {
 		return this.id.getValue();
 	}
 
-	private validateManagerPermission(isManager: boolean) {
+	private validateManagerPermission(isManager: Role.Params['isManager']) {
 		if (!isManager) {
 			throw new DomainError(messages.ROLE_MANAGER_PERMISSION_REQUIRED);
 		}
 	}
 
-	static create(input: Input): Role {
-		return new Role(input);
+	static create(params: Role.Params): Role {
+		return new Role(params);
 	}
+}
+export namespace Role {
+	export enum ValidRoles {
+		Admin = 'Admin',
+		Manager = 'Manager',
+		Client = 'Client',
+	}
+	export type Params = {
+		name: keyof typeof ValidRoles;
+		id?: string;
+		isManager: boolean;
+	};
 }

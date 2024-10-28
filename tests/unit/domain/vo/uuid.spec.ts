@@ -22,7 +22,7 @@ describe('UUID value object', () => {
 	test('não deve criar um UUID com a entrada inválida', () => {
 		const input = '';
 		expect(() => new UUID(input)).toThrow(
-			new DomainError(messages.INVALID_UUID_FORMAT),
+			new DomainError(messages.INVALID_ID_FORMAT),
 		);
 	});
 });

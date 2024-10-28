@@ -12,6 +12,7 @@ export default defineConfig({
 			reporter: ['text', 'lcov'],
 		},
 		include: ['tests/**/*.spec.ts', 'tests/**/*.test.ts'],
+		exclude: ['_src/**/*.spec.ts', '_src/**/*.test.ts'],
 	},
 
 	plugins: [tsconfigPaths()],

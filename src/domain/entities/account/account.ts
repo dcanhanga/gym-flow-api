@@ -1,4 +1,4 @@
-import type { CreateAccountDto } from '@/domain/dto/account';
+import type { AccountEntityCreationDto } from '@/domain/dto/account';
 import type { RoleDto } from '@/domain/dto/role';
 import { AccountPermissionService } from '@/domain/services/account-permission';
 import { Email, Name, Password, UUID, Url } from '@/domain/vo';
@@ -14,12 +14,12 @@ type Input = {
 };
 
 class Account {
-	private password: Password;
-	private email: Email;
-	private name: Name;
-	private roleId: UUID;
-	private id: UUID;
-	private avatarUrl: Url;
+	private readonly password: Password;
+	private readonly email: Email;
+	private readonly name: Name;
+	private readonly roleId: UUID;
+	private readonly id: UUID;
+	private readonly avatarUrl: Url;
 
 	private constructor(input: Input) {
 		this.email = new Email(input.email);
@@ -53,7 +53,7 @@ class Account {
 		return this.avatarUrl.getValue();
 	}
 
-	static create(input: CreateAccountDto): Account {
+	static create(input: AccountEntityCreationDto): Account {
 		const { role, isManager } = input;
 		AccountPermissionService.validate({ isManager, role });
 		return new Account({ ...input, avatarUrl: null });

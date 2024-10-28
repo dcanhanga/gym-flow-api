@@ -14,7 +14,7 @@ export class UUID {
 	}
 	validate(uuid: string) {
 		if (!uuid.match(uuidRegex))
-			throw new DomainError(messages.INVALID_UUID_FORMAT);
+			throw new DomainError(messages.INVALID_ID_FORMAT);
 	}
 	getValue() {
 		return this.value;

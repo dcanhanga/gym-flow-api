@@ -1,15 +1,14 @@
 import type { RoleDto } from '../dto/role';
-import type { ValidRoles } from '../entities/role/role';
+import type { ValidRoles } from '../entities/role';
 
-interface RoleRepository {
+export interface RoleRepository {
 	findByName(roleName: string): Promise<OptionalRole>;
 	findById(roleId: string): Promise<OptionalRole>;
-	register(params: RegisterParams): Promise<RoleDto>;
+	register(params: RegisterRoleParams): Promise<RoleDto>;
 }
 
-type OptionalRole = RoleDto | null;
-type RegisterParams = {
-	name: ValidRoles;
+export type OptionalRole = RoleDto | null;
+export type RegisterRoleParams = {
+	name: keyof typeof ValidRoles;
 	id?: string;
 };
-export type { RoleRepository, OptionalRole, RegisterParams };
