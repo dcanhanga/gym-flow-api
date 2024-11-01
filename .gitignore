@@ -39,3 +39,5 @@ yarn-error.log*
 next-env.d.ts
 _src/
 _tests/
+__src/
+__tests/

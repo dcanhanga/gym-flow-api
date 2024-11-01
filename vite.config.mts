@@ -11,8 +11,19 @@ export default defineConfig({
 			provider: 'v8',
 			reporter: ['text', 'lcov'],
 		},
-		include: ['tests/**/*.spec.ts', 'tests/**/*.test.ts'],
-		exclude: ['_src/**/*.spec.ts', '_src/**/*.test.ts'],
+		include: [
+			'**/__tests__/**/*.spec.ts',
+			'**/*.test.ts',
+			'**/*.{test,spec}.ts',
+		],
+
+		exclude: [
+			'__src/**/*.spec.ts',
+			'_src/**/*.test.ts',
+			'__tests/**/*.spec.ts',
+			'_tests/**/*.test.ts',
+			'node_modules/',
+		],
 	},
 
 	plugins: [tsconfigPaths()],

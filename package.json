@@ -3,6 +3,7 @@
 	"version": "1.0.0",
 	"description": "GyPass style app",
 	"main": "build/server.js",
+	"type": "module",
 	"engines": {
 		"node": ">=20"
 	},
@@ -10,30 +11,21 @@
 		"docker:up": "docker compose up -d",
 		"dev": "tsx --watch src/main/server.ts",
 		"start": "node --env-file .env build/server.js",
-		"build": "tsup src --out-dir build",
+		"build": "tsup",
 		"biome": "biome check --write --no-errors-on-unmatched",
 		"prepare": "husky",
+		"test:unit:watch": "vitest src/",
+		"test:unit": "vitest run src/",
+		"test:combo": "npm run test:unit",
 		"test:create-prisma-environment": "npm link ./prisma/vitest-environment-prisma",
 		"test:install-prisma-environment": "npm link vitest-environment-prisma",
-		"test": "vitest run",
-		"test:watch": "vitest",
-		"test:unit": "vitest run tests/unit",
-		"test:unit:watch": "vitest tests/unit",
-		"test:integration": "vitest run tests/integration",
-		"test:integration:watch": "vitest tests/integration",
-		"test:combo": "npm run test:unit & npm run test:integration",
-		"test:combo:watch": "npm run test:unit:watch & npm run test:integration:watch",
 		"test:coverage": "vitest run --coverage",
 		"test:ui": "vitest --ui",
 		"pretest:e2e": "run-s test:create-prisma-environment test:install-prisma-environment",
 		"test:e2e": "vitest run tests/e2e",
 		"test:e2e:watch": "vitest tests/e2e"
 	},
-	"keywords": [
-		"Api rest",
-		"Solid",
-		"typescript"
-	],
+	"keywords": ["Api rest", "Solid", "typescript"],
 	"author": "Domingos Canhanga",
 	"license": "ISC",
 	"dependencies": {

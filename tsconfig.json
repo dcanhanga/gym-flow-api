@@ -4,13 +4,14 @@
 	"_version": "20",
 
 	"compilerOptions": {
-		"lib": ["es2023"],
-		"module": "node16",
-		"target": "es2022",
+		"lib": ["ES2023"],
+		"target": "ES2022",
+		"module": "NodeNext",
+		"moduleResolution": "NodeNext",
 		"strict": true,
 		"esModuleInterop": true,
 		"skipLibCheck": true,
-		"moduleResolution": "node16",
+
 		"rootDirs": ["src", "tests"],
 		"baseUrl": "src",
 		"paths": {
