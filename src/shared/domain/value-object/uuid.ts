@@ -1,11 +1,12 @@
 import { randomUUID } from 'node:crypto';
+import { InvalidUUIDError } from '@/shared/errors/domain.error.js';
 import { uuidRegex } from '@/shared/utils/regex.js';
 import { Result } from '@/shared/utils/result.js';
 import { ValueObject } from './value-object.js';
 
-interface UUIDProps {
+type UUIDProps = {
 	value: string;
-}
+};
 
 export class UUID extends ValueObject<UUIDProps> {
 	private constructor(props: UUIDProps) {
@@ -16,7 +17,7 @@ export class UUID extends ValueObject<UUIDProps> {
 		const uuid = id ?? randomUUID();
 
 		if (!UUID.validate(uuid)) {
-			return Result.fail(new Error('Invalid UUID format'));
+			return Result.fail(new InvalidUUIDError(uuid));
 		}
 
 		return Result.ok(new UUID({ value: uuid }));

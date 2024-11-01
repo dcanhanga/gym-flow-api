@@ -1,3 +1,4 @@
+import { messages } from '@/shared/utils/messages.js';
 import { uuidRegex } from '@/shared/utils/regex.js';
 import { describe, expect, it } from 'vitest';
 import { UUID } from './uuid.js';
@@ -38,7 +39,9 @@ describe('UUID Value Object', () => {
 			const invalidUUID = 'invalid-uuid';
 			const uuidResult = UUID.create(invalidUUID);
 			expect(uuidResult.isFail()).toBe(true);
-			expect(uuidResult.unwrapError().message).toBe('Invalid UUID format');
+			expect(uuidResult.unwrapError().message).toBe(
+				messages.INVALID_UUID_FORMAT,
+			);
 		});
 	});
 });
