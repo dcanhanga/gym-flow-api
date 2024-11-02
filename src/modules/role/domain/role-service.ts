@@ -3,6 +3,7 @@ import {
 	type ValidRole,
 	ValidRoles,
 } from '@/shared/utils/enums/valid-roles.js';
+import { messages } from '@/shared/utils/messages.js';
 import { Result } from '@/shared/utils/result.js';
 
 export class RoleService {
@@ -10,7 +11,7 @@ export class RoleService {
 		const isValidName = Object.values(ValidRoles).includes(name as ValidRoles);
 		if (!isValidName) {
 			return Result.fail(
-				new DomainError('Invalid role name provided', {
+				new DomainError(messages.INVALID_ROLE_NAME, {
 					providedName: name,
 					validRoles: RoleService.getValidRoles(),
 				}),
@@ -24,7 +25,7 @@ export class RoleService {
 		const hasPermission = createdBy === ValidRoles.Manager;
 		if (!hasPermission) {
 			return Result.fail(
-				new DomainError('Insufficient permissions to create role', {
+				new DomainError(messages.INSUFFICIENT_PERMISSIONS_TO_CREATE_ROLE, {
 					requiredRole: 'Manager',
 					providedRole: createdBy,
 				}),

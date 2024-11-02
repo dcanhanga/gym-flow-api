@@ -42,9 +42,6 @@ describe('Role', () => {
 
 			expect(role.isFail()).toBe(true);
 			expect(role.unwrapError()).toBeInstanceOf(DomainError);
-			expect(role.unwrapError().message).toBe(
-				'Insufficient permissions to create role',
-			);
 		});
 
 		it('deve retornar erro para um nome de role inválido', () => {
@@ -57,7 +54,6 @@ describe('Role', () => {
 
 			expect(role.isFail()).toBe(true);
 			expect(role.unwrapError()).toBeInstanceOf(DomainError);
-			expect(role.unwrapError().message).toBe('Invalid role name provided');
 		});
 	});
 

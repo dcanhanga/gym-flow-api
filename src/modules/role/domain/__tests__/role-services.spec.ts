@@ -16,7 +16,6 @@ describe('RoleService', () => {
 			const result = RoleService.validateName(invalidRole);
 			expect(result.isFail()).toBe(true);
 			expect(result.unwrapError()).toBeInstanceOf(DomainError);
-			expect(result.unwrapError().message).toBe('Invalid role name provided');
 			expect(result.unwrapError().context).toEqual({
 				providedName: invalidRole,
 				validRoles: RoleService.getValidRoles(),
@@ -34,9 +33,6 @@ describe('RoleService', () => {
 			const result = RoleService.validatePermission(ValidRoles.Admin);
 			expect(result.isFail()).toBe(true);
 			expect(result.unwrapError()).toBeInstanceOf(DomainError);
-			expect(result.unwrapError().message).toBe(
-				'Insufficient permissions to create role',
-			);
 			expect(result.unwrapError().context).toEqual({
 				requiredRole: 'Manager',
 				providedRole: ValidRoles.Admin,

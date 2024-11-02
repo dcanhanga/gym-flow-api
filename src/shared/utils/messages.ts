@@ -19,6 +19,8 @@ const messages = {
 	INTERNAL_SERVER_ERROR: 'INTERNAL_SERVER_ERROR',
 	ROLE_NOT_FOUND: 'ROLE_NOT_FOUND',
 	ROLE_ALREADY_EXISTS: 'ROLE_ALREADY_EXISTS',
+	INSUFFICIENT_PERMISSIONS_TO_CREATE_ROLE:
+		'Insufficient permissions to create role'.toUpperCase(),
 } as const;
 export { messages };
 
