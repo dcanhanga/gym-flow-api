@@ -1,15 +1,15 @@
 export class Result<T, E = Error> {
 	private constructor(
 		private readonly isSuccess: boolean,
-		private readonly value: T | null,
-		private readonly error: E | null,
+		private readonly value: T | null = null,
+		private readonly error: E | null = null,
 	) {}
 
-	static ok<T>(value: T): Result<T, Error> {
-		return new Result<T, Error>(true, value, null);
+	static ok<T, E = Error>(value: T): Result<T, E> {
+		return new Result<T, E>(true, value, null);
 	}
 	static fail<E>(error: E): Result<never, E> {
-		return new Result<never, E>(false, null as never, error);
+		return new Result<never, E>(false, null, error);
 	}
 	public isOk(): boolean {
 		return this.isSuccess;

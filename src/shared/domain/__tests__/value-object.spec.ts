@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { ValueObject } from './value-object.js';
+import { ValueObject } from '../value-object/value-object.js';
 
 class TestValueObject extends ValueObject<{ value: string }> {
 	constructor(value: string) {
@@ -9,12 +9,16 @@ class TestValueObject extends ValueObject<{ value: string }> {
 }
 
 describe('ValueObject', () => {
-	describe('Casos de Sucesso', () => {
+	// Testes de criação
+	describe('Criação de ValueObject', () => {
 		it('deve criar um objeto de valor com props congelados', () => {
 			const vo = new TestValueObject('test');
 			expect(Object.isFrozen(vo['props'])).toBe(true);
 		});
+	});
 
+	// Testes de comparação
+	describe('Comparação de ValueObjects', () => {
 		it('deve retornar verdadeiro ao comparar dois objetos de valor igual', () => {
 			const vo1 = new TestValueObject('test');
 			const vo2 = new TestValueObject('test');
@@ -26,9 +30,7 @@ describe('ValueObject', () => {
 			const vo2 = new TestValueObject('test2');
 			expect(vo1.equals(vo2)).toBe(false);
 		});
-	});
 
-	describe('Casos de Erro', () => {
 		it('deve retornar falso ao comparar com nulo', () => {
 			const vo = new TestValueObject('test');
 			// @ts-ignore
