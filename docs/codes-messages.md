@@ -1,25 +1,27 @@
-### **Documentação de Códigos de Sucesso e Erro**
+# **Documentação de Códigos de Sucesso e Erro**
 
 Esta documentação tem como objetivo fornecer uma abordagem estruturada e consistente para a criação de códigos de sucesso e erro em sistemas, facilitando o diagnóstico e a resolução de problemas.
 
 ---
 
-### **1. Use Nomes Descritivos e Autoexplicativos**
+## **1. Use Nomes Descritivos e Autoexplicativos**
 
 - O código de sucesso ou erro deve refletir de forma clara e precisa o motivo do sucesso ou falha.
 - **Evite abreviações** ou **termos vagos**. Sempre que possível, use verbos e substantivos que descrevam a **ação** que foi realizada ou falhou e o **recurso** afetado.
 
 **Exemplo:**
+
 - **Certo**: `USER_INVALID_EMAIL_FORMAT`
 - **Errado**: `EMAIL_FORMAT_ERROR`
 
 ---
 
-### **2. Organização por Categorias**
+## **2. Organização por Categorias**
 
 Classifique os sucessos e erros por tipo de operação ou recurso utilizando prefixos que ajudem a identificar rapidamente o contexto.
 
 **Prefixos recomendados:**
+
 - **USER_**: Relacionados a operações com o usuário (ex.: `USER_NOT_FOUND`, `USER_CREATED_SUCCESSFULLY`).
 - **AUTH_**: Relacionados à autenticação (ex.: `AUTH_INVALID_CREDENTIALS`, `AUTH_SUCCESS`).
 - **VALIDATION_**: Relacionados à validação de dados (ex.: `VALIDATION_FIELD_REQUIRED`, `VALIDATION_EMAIL_FORMAT`).
@@ -28,19 +30,20 @@ Classifique os sucessos e erros por tipo de operação ou recurso utilizando pre
 
 ---
 
-### **3. Estrutura de Ação + Condição**
+## **3. Estrutura de Ação + Condição**
 
 A nomenclatura deve refletir a **ação** que o sistema tentou realizar ou realizou e a **condição** que causou o erro ou sucesso.
 
 **Estrutura recomendada**: `ACTION_CONDITION`
 
 **Exemplos:**
+
 - **Erro**: `USER_CREATE_FAILED`, `USER_CREATE_INVALID_DATA`
 - **Sucesso**: `USER_CREATED_SUCCESSFULLY`, `PASSWORD_RESET_SUCCESS`
 
 ---
 
-### **4. Seja Específico e Contextual**
+## **4. Seja Específico e Contextual**
 
 Códigos mais específicos e detalhados facilitam o diagnóstico e a resolução do problema. Evite erros ou sucessos genéricos como `ERROR_001` ou `UNKNOWN_ERROR`.
 
@@ -48,7 +51,7 @@ Códigos mais específicos e detalhados facilitam o diagnóstico e a resolução
 
 ---
 
-### **5. Consistência na Nomenclatura**
+## **5. Consistência na Nomenclatura**
 
 Sempre use **letras maiúsculas** e **underscores** para separar palavras (ex.: `INVALID_USER_INPUT`, `AUTHORIZATION_FAILED`).
 
@@ -61,6 +64,7 @@ Garanta que todos os códigos de sucesso e erro sigam o mesmo padrão de nomencl
 O código de erro ou sucesso deve ser claro o suficiente para que o desenvolvedor ou usuário entenda rapidamente a causa da falha ou o resultado da operação.
 
 **Exemplos:**
+
 - **Erro**: `INVALID_EMAIL_FORMAT` → "Formato de e-mail inválido."
 - **Erro**: `PASSWORD_TOO_SHORT` → "A senha deve ter pelo menos 8 caracteres."
 - **Sucesso**: `USER_CREATED_SUCCESSFULLY` → "Usuário criado com sucesso."
@@ -73,15 +77,17 @@ O código de erro ou sucesso deve ser claro o suficiente para que o desenvolvedo
 Tente evitar códigos de erro que dependem de detalhes de implementação que podem mudar com o tempo.
 
 **Exemplo de erro genérico:**
+
 - Ao invés de usar `PASSWORD_HASHING_FAILED`, utilize algo mais genérico, como `PASSWORD_ENCRYPTION_FAILED`, que pode ser aplicável a diversas abordagens de criptografia.
 
 ---
 
-### **8. Erros Relacionados a Campos (Validação de Campos)**
+## **8. Erros Relacionados a Campos (Validação de Campos)**
 
 Use a nomenclatura `FIELD_<CONDITION>` para erros de validação de campos.
 
 **Exemplos:**
+
 - **Erro**: `FIELD_REQUIRED` → "Campo obrigatório não preenchido."
 - **Erro**: `FIELD_TOO_SHORT` → "O campo {campo} deve ter pelo menos {minLength} caracteres."
 - **Erro**: `FIELD_FORMAT_INVALID` → "Formato inválido no campo {campo}."
@@ -89,33 +95,24 @@ Use a nomenclatura `FIELD_<CONDITION>` para erros de validação de campos.
 
 ---
 
-### **9. Evite Duplicação de Códigos de Erro**
+## **9. Evite Duplicação de Códigos de Erro**
 
 Evite criar múltiplos códigos para o mesmo tipo de erro ou sucesso, apenas por causa de variações pequenas no contexto. Utilize um código único para um tipo de erro ou sucesso e forneça mais informações nas mensagens ou dados complementares.
 
 **Exemplo:**
+
 - Se a validação de um campo falhar por diferentes motivos (formato inválido, tamanho curto, etc.), use o código `FIELD_INVALID` e forneça os detalhes específicos na mensagem de erro.
 
 ---
 
 **Resumo do Padrão**:
+
 - **Códigos de Erro**: Refletem falhas e problemas específicos na execução.
 - **Códigos de Sucesso**: Indicam a conclusão bem-sucedida de uma operação ou ação.
 - **Estrutura**: Sempre utilize uma estrutura que combine a **ação** (verbo) e a **condição** (problema ou resultado).
 - **Exemplo Prático**: `USER_CREATE_FAILED`, `USER_CREATED_SUCCESSFULLY`, `PASSWORD_TOO_WEAK`, `PERMISSION_GRANTED`.
 
-**Veja os Códigos Registrados**
+## **Veja os Códigos Registrados**
 
 - [Códigos de Sucesso Registrados](./sucess-code.md)
-- [Códigos de Erro Registrados](./erro-code.md)
-
-
-
-
-
-### **Erros Registrados**
-
-| **Código de Erro**                    | **Descrição do Erro**                                                                                       | **Mensagem de Erro**                                                                                   |
-|---------------------------------------|------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------|
-
-
+- [Códigos de Erro Registrados](./error-code.md)
