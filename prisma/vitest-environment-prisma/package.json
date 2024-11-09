@@ -1,6 +1,0 @@
-{
-	"name": "vitest-environment-prisma",
-	"version": "1.0.0",
-	"type": "module",
-	"main": "prisma-test-environment.ts"
-}
