@@ -17,13 +17,7 @@ export default defineConfig({
 			'**/*.{test,spec}.ts',
 		],
 
-		exclude: [
-			'__src/**/*.spec.ts',
-			'_src/**/*.test.ts',
-			'__tests/**/*.spec.ts',
-			'_tests/**/*.test.ts',
-			'node_modules/',
-		],
+		exclude: ['_/', 'node_modules/'],
 	},
 
 	plugins: [tsconfigPaths()],

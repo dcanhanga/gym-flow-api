@@ -2,5 +2,5 @@
 	"[prisma]": {
 		"editor.formatOnSave": true
 	},
-	"cSpell.words": ["dayjs", "fastify", "Hasher"]
+	"cSpell.words": ["dayjs", "fastify", "Hasher", "tsup"]
 }

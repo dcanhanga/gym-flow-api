@@ -1,20 +1,19 @@
 services:
-  pg:
-    image: bitnami/postgresql:13.16.0
-    container_name: gym-flow-db
+  mongo:
+    image: mongo:6.0.3
+    container_name: gym-flow-mongo-db
     ports:
-      - '5432:5432'
+      - '27017:27017'
     environment:
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=admin
-      - POSTGRES_DB=gymFlow
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
     volumes:
-      - pgdata:/bitnami/postgresql
+      - mongo_data:/data/db
     networks:
       - gym-flow-network
 
 volumes:
-  pgdata:
+  mongo_data:
     driver: local
 
 networks:

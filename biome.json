@@ -29,6 +29,6 @@
 		}
 	},
 	"files": {
-		"ignore": ["build"]
+		"ignore": ["tsconfig.*", "coverage"]
 	}
 }
