@@ -3,29 +3,43 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
-model Acount {
-  id           String   @id @default(uuid())
-  name         String
-  email        String   @unique()
-  passwordHash String   @map("password_hash")
-  createdAt    DateTime @default(now()) @map("created_at")
-  avatarUrl    String?  @map("avatar_url")
-  roleId       String   @map("role_id")
+model Region {
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  Country     String?
+  midlePoint  coordinates
+  Continent   String
+  coordinates coordinates[]
+  SubRegion   SubRegion[]
 
-  role Role @relation(fields: [roleId], references: [id])
-
-  @@map("acounts")
+  @@map("regions")
 }
 
-model Role {
-  id   String @id @default(uuid())
-  name String @unique()
+model SubRegion {
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  coordinates coordinates[]
+  midlePoint  coordinates
+  regionId    String
+  region      Region        @relation(fields: [regionId], references: [id])
+  gyms        Gym[]
+}
 
-  acounts Acount[]
+model Gym {
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  subRegionId String?
+  subRegion   SubRegion? @relation(fields: [subRegionId], references: [id])
+  createdAt   DateTime   @default(now())
 
-  @@map("roles")
+  @@map("gyms")
+}
+
+type coordinates {
+  latitude  Float
+  longitude Float
 }

@@ -4,18 +4,21 @@
 	"_version": "20",
 
 	"compilerOptions": {
-		"lib": ["es2023"],
+		"lib": ["ES2023"],
 		"module": "node16",
-		"target": "es2022",
+		"target": "ES2022",
+		"moduleResolution": "NodeNext",
 		"strict": true,
 		"esModuleInterop": true,
 		"skipLibCheck": true,
-		"moduleResolution": "node16",
+		"outDir": "dist",
 		"rootDirs": ["src", "tests"],
 		"baseUrl": "src",
 		"paths": {
 			"@/tests/*": ["../tests/*"],
 			"@/*": ["*"]
 		}
-	}
+	},
+
+	"exclude": ["node_modules", "dist", "tests", "_**"]
 }

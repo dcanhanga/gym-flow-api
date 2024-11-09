@@ -10,7 +10,7 @@
 			"performance": {
 				"recommended": true
 			},
-			"complexity": { "noStaticOnlyClass": "off" },
+			"complexity": { "noStaticOnlyClass": "off", "useLiteralKeys": "off" },
 			"style": {
 				"noUnusedTemplateLiteral": "off"
 			},
@@ -29,6 +29,6 @@
 		}
 	},
 	"files": {
-		"ignore": ["build"]
+		"ignore": ["tsconfig.*", "coverage"]
 	}
 }

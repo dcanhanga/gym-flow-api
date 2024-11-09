@@ -1,20 +1,19 @@
-import { execSync } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
 import 'dotenv/config';
 
 import { PrismaClient } from '@prisma/client';
+import { MongoClient } from 'mongodb';
 import type { Environment } from 'vitest/environments';
 
 const prisma = new PrismaClient();
 
-function generateDatabaseURL(schema: string) {
+function generateDatabaseURL(database: string) {
 	if (!process.env.DATABASE_URL) {
 		throw new Error('Please provide a DATABASE_URL environment variable.');
 	}
 
 	const url = new URL(process.env.DATABASE_URL);
-
-	url.searchParams.set('schema', schema);
+	url.pathname = `/${database}`; // Define o nome do banco de dados como caminho na URL.
 
 	return url.toString();
 }
@@ -22,19 +21,28 @@ function generateDatabaseURL(schema: string) {
 export default (<Environment>{
 	name: 'prisma',
 	async setup() {
-		const schema = randomUUID();
-		const databaseURL = generateDatabaseURL(schema);
+		const databaseName = `test_db_${randomUUID()}`; // Define o nome de um banco de dados temporário.
+		const databaseURL = generateDatabaseURL(databaseName);
 
 		process.env.DATABASE_URL = databaseURL;
 
-		execSync('npx prisma migrate deploy');
+		// MongoDB não exige migrações da mesma forma que PostgreSQL. Para criação do banco, basta conectar.
+		await prisma.$connect();
 
 		return {
 			async teardown() {
-				await prisma.$executeRawUnsafe(
-					`DROP SCHEMA IF EXISTS "${schema}" CASCADE`,
-				);
+				const client = new MongoClient(databaseURL); // Conecta usando o cliente MongoDB
+				await client.connect();
 
+				const db = client.db(databaseName);
+
+				// Obtém todas as coleções e as remove uma por uma
+				const collections = await db.listCollections().toArray();
+				for (const { name } of collections) {
+					await db.collection(name).drop();
+				}
+
+				await client.close();
 				await prisma.$disconnect();
 			},
 		};
