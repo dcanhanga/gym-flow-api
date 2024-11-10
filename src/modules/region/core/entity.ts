@@ -51,7 +51,7 @@ export class Region extends BaseEntity<RegionInput> {
 	}
 
 	public static create(input: RegionInput): Result<Region, AppError> {
-		const validationResult = Region.validate(input);
+		const validationResult = RegionValidator.validate(input);
 		if (validationResult.isFail) {
 			return Result.fail(validationResult.unwrapError);
 		}
@@ -59,7 +59,20 @@ export class Region extends BaseEntity<RegionInput> {
 		const region = new Region(input, props);
 		return Result.ok(region);
 	}
-	private static validate(input: RegionInput): Result<RegionProps, AppError> {
+
+	public toJSON() {
+		return {
+			id: this.id,
+			name: this.name,
+			country: this.country,
+			midpoint: this.midpoint,
+			polygon: this.polygonFlat,
+		};
+	}
+}
+
+class RegionValidator {
+	public static validate(input: RegionInput): Result<RegionProps, AppError> {
 		const validationErrors: Record<string, unknown> = {};
 		const { country, midpoint, name, polygon: polygonInput, id } = input;
 		const idResult = UUID.create(id);
@@ -97,14 +110,5 @@ export class Region extends BaseEntity<RegionInput> {
 			midpoint: midpointResult.unwrap,
 			polygon: polygonResult.unwrap,
 		});
-	}
-	public toJSON() {
-		return {
-			id: this.id,
-			name: this.name,
-			country: this.country,
-			midpoint: this.midpoint,
-			polygon: this.polygonFlat,
-		};
 	}
 }
