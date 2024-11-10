@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { Result } from './result.js';
+import { Result } from '../utils/result.js';
 
 describe('Result', () => {
 	describe('Casos de Sucesso', () => {

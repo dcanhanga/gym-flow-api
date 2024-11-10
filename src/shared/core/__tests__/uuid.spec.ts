@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { messages } from '@/shared/constants/messages.js';
-import { uuidRegex } from '@/shared/utils/regex.js';
+import { messages } from '@/shared/core/constants/messages.js';
+import { uuidRegex } from '@/shared/core/utils/regex.js';
 import { UUID } from '../value-object/uuid.js';
 
 describe('UUID Value Object', () => {

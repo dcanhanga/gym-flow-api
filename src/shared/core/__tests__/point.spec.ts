@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { messages } from '@/shared/constants/messages.js';
-import { AppError } from '@/shared/errors/app-error.js';
+import { messages } from '@/shared/core/constants/messages.js';
+import { AppError } from '@/shared/core/errors/app-error.js';
 import { Point } from '../value-object/point.js';
 
 describe('Point Value Object', () => {

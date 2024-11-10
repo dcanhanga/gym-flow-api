@@ -5,7 +5,6 @@ export default defineConfig({
 	test: {
 		environment: 'node',
 		silent: true,
-		environmentMatchGlobs: [['tests/e2e/**', 'prisma']],
 		coverage: {
 			all: false,
 			provider: 'v8',
@@ -16,7 +15,6 @@ export default defineConfig({
 			'**/*.test.ts',
 			'**/*.{test,spec}.ts',
 		],
-
 		exclude: ['_/', 'node_modules/'],
 	},
 

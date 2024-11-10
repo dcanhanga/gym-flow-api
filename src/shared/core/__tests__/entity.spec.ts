@@ -11,7 +11,7 @@ describe('BaseEntity', () => {
 	describe('Criação de entidade', () => {
 		it('deve criar uma entidade com props congelados', () => {
 			const entity = new TestEntity('test');
-			expect(Object.isFrozen(entity['props'])).toBe(true);
+			expect(Object.isFrozen(entity['input'])).toBe(true);
 		});
 	});
 

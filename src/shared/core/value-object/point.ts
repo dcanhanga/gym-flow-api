@@ -1,8 +1,8 @@
-import { messages } from '@/shared/constants/messages.js';
-import { AppError } from '@/shared/errors/app-error.js';
-import type { Coordinate } from '@/shared/types/index.js';
-import { Result } from '@/shared/utils/result.js';
-import { ValidateCoordinate } from '@/shared/utils/validate-coordinate.js';
+import { messages } from '@/shared/core/constants/messages.js';
+import { AppError } from '@/shared/core/errors/app-error.js';
+import type { Coordinate } from '@/shared/core/types/index.js';
+import { Result } from '@/shared/core/utils/result.js';
+import { ValidateCoordinate } from '@/shared/core/utils/validate-coordinate.js';
 import { ValueObject } from './value-object.js';
 
 type PointInput = Coordinate;

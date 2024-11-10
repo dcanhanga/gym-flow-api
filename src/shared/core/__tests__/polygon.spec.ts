@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { AppError } from '@/shared/errors/app-error.js';
+import { AppError } from '@/shared/core/errors/app-error.js';
 import { Polygon } from '../value-object/polygon.js';
 
 describe('Polygon Value Object', () => {

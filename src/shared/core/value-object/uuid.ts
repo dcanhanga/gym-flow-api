@@ -1,9 +1,9 @@
 import { randomUUID } from 'node:crypto';
-import { httpStatusCode } from '@/shared/constants/http-status-code.js';
-import { messages } from '@/shared/constants/messages.js';
-import { AppError } from '@/shared/errors/app-error.js';
-import { uuidRegex } from '@/shared/utils/regex.js';
-import { Result } from '@/shared/utils/result.js';
+import { httpStatusCode } from '@/shared/core/constants/http-status-code.js';
+import { messages } from '@/shared/core/constants/messages.js';
+import { AppError } from '@/shared/core/errors/app-error.js';
+import { uuidRegex } from '@/shared/core/utils/regex.js';
+import { Result } from '@/shared/core/utils/result.js';
 import { ValueObject } from './value-object.js';
 
 type UUIDInput = {
@@ -15,7 +15,7 @@ export class UUID extends ValueObject<UUIDInput> {
 		super(props);
 	}
 
-	public static create(id?: string): Result<UUID, Error> {
+	public static create(id?: string): Result<UUID, AppError> {
 		const uuid = id ?? randomUUID();
 
 		if (!UUID.validate(uuid)) {
