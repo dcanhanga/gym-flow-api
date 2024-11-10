@@ -47,4 +47,7 @@ export class Point extends ValueObject<PointInput> {
 	public get toArray(): [number, number] {
 		return [this.input.lat, this.input.lon];
 	}
+	public get getValue() {
+		return this.input;
+	}
 }

@@ -1,8 +1,8 @@
 export abstract class BaseEntity<T> {
-	protected readonly props: T;
+	protected readonly input: T;
 
-	constructor(props: T) {
-		this.props = Object.freeze(props);
+	constructor(input: T) {
+		this.input = Object.freeze(input);
 	}
 
 	public equals(vo?: BaseEntity<T>): boolean {
@@ -10,6 +10,6 @@ export abstract class BaseEntity<T> {
 			return false;
 		}
 
-		return JSON.stringify(this.props) === JSON.stringify(vo.props);
+		return JSON.stringify(this.input) === JSON.stringify(vo.input);
 	}
 }

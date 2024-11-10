@@ -44,7 +44,7 @@ describe('Point Value Object', () => {
 		const result = sut.create(input);
 
 		expect(result.isOk).toBe(true);
-		expect(result.unwrap.gateValue).toStrictEqual(input);
+		expect(result.unwrap.getValue).toStrictEqual(input);
 	});
 
 	it('deve retornar as coordenadas como um array', () => {
