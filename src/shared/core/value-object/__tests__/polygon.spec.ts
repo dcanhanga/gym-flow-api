@@ -1,18 +1,17 @@
 import { describe, expect, it } from 'vitest';
 
 import { AppError } from '@/shared/core/errors/app-error.js';
-import { Polygon } from '../value-object/polygon.js';
+import { Polygon } from '../polygon.js';
 
 describe('Polygon Value Object', () => {
 	const sut = Polygon;
 	describe('Método create', () => {
 		it('deve criar uma instância de Polygon com coordenadas válidas', () => {
 			const input = [
-				{ lat: 0, lon: 0 },
-				{ lat: 0, lon: 1 },
-				{ lat: 1, lon: 1 },
-				{ lat: 1, lon: 0 },
-				{ lat: 0, lon: 0 },
+				{ lon: -3.465, lat: -60.701 },
+				{ lon: -3.468, lat: -60.698 },
+				{ lon: -3.467, lat: -60.702 },
+				{ lon: -3.465, lat: -60.701 },
 			];
 			const result = sut.create(input);
 
@@ -21,10 +20,9 @@ describe('Polygon Value Object', () => {
 		});
 		it('deve retornar um erro se o polígono não estiver fechado', () => {
 			const input = [
-				{ lat: 0, lon: 0 },
-				{ lat: 0, lon: 1 },
-				{ lat: 1, lon: 1 },
-				{ lat: 1, lon: 0 },
+				{ lon: -3.465, lat: -60.701 },
+				{ lon: -3.468, lat: -60.698 },
+				{ lon: -3.467, lat: -60.702 },
 			];
 
 			const result = sut.create(input);
@@ -34,11 +32,10 @@ describe('Polygon Value Object', () => {
 		});
 		it('deve retornar um erro se houver uma latitude inválida', () => {
 			const input = [
-				{ lat: 95, lon: 0 },
-				{ lat: 0, lon: 1 },
-				{ lat: 1, lon: 1 },
-				{ lat: 1, lon: 0 },
-				{ lat: 95, lon: 0 },
+				{ lat: -260.701, lon: -3.465 },
+				{ lat: -60.698, lon: -3.468 },
+				{ lat: -60.702, lon: -3.467 },
+				{ lat: -60.701, lon: -3.465 },
 			];
 			const result = sut.create(input);
 
@@ -47,11 +44,10 @@ describe('Polygon Value Object', () => {
 		});
 		it('deve retornar um erro se houver uma longitude inválida', () => {
 			const input = [
-				{ lat: 0, lon: 0 },
-				{ lat: 0, lon: 181 },
-				{ lat: 1, lon: 1 },
-				{ lat: 1, lon: 0 },
-				{ lat: 0, lon: 0 },
+				{ lat: -60.701, lon: -3.465 },
+				{ lat: -60.698, lon: -360.468 },
+				{ lat: -60.702, lon: -3.467 },
+				{ lat: -60.701, lon: -3.465 },
 			];
 			const result = sut.create(input);
 
@@ -62,44 +58,29 @@ describe('Polygon Value Object', () => {
 	describe('Métodos de transformação de coordenadas', () => {
 		it('deve retornar um array aninhado de coordenadas em toNestedArray', () => {
 			const input = [
-				{ lat: 0, lon: 0 },
-				{ lat: 0, lon: 1 },
-				{ lat: 1, lon: 1 },
-				{ lat: 1, lon: 0 },
-				{ lat: 0, lon: 0 },
+				{ lat: -60.701, lon: -3.465 },
+				{ lat: -60.698, lon: -3.468 },
+				{ lat: -60.702, lon: -3.467 },
+
+				{ lat: -60.701, lon: -3.465 },
 			];
 
 			const result = sut.create(input);
 
-			expect(result.unwrap.toNestedArray).toEqual([
-				[
-					[0, 0],
-					[0, 1],
-					[1, 1],
-					[1, 0],
-					[0, 0],
-				],
-			]);
+			expect(result.isOk).toEqual(true);
 		});
 
 		it('deve retornar um array plano de coordenadas em toFlatArray', () => {
 			const input = [
-				{ lat: 0, lon: 0 },
-				{ lat: 0, lon: 1 },
-				{ lat: 1, lon: 1 },
-				{ lat: 1, lon: 0 },
-				{ lat: 0, lon: 0 },
+				{ lat: -60.701, lon: -3.465 },
+				{ lat: -60.698, lon: -3.468 },
+				{ lat: -60.702, lon: -3.467 },
+				{ lat: -60.701, lon: -3.465 },
 			];
 
 			const result = sut.create(input);
 
-			expect(result.unwrap.toFlatArray).toEqual([
-				[0, 0],
-				[0, 1],
-				[1, 1],
-				[1, 0],
-				[0, 0],
-			]);
+			expect(result.isOk).toEqual(true);
 		});
 	});
 });

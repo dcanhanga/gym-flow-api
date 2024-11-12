@@ -1,21 +1,17 @@
 import { Region } from '@/modules/region/infrastructure/model.js';
-
 import { Point } from '@/shared/core/value-object/point.js';
 import { Polygon } from '@/shared/core/value-object/polygon.js';
+
 import mongoose from 'mongoose';
 import { env } from './config/env/config.js';
 import { app } from './config/fastify/app.js';
 
 async function createAndSaveRegion() {
-	// Dados de entrada para salvar no MongoDB
-
 	const polygon = Polygon.create([
-		{ lat: -60.701, lon: -3.465 },
-		{ lat: -560, lon: -280 },
-		{ lat: -60.698, lon: -3.468 },
-		{ lat: -60.698, lon: -3.465 },
-		{ lat: -60.701, lon: -3.465 },
-		{ lat: -60.701, lon: -3.468 },
+		{ lon: -3.465, lat: -60.701 },
+		{ lon: -3.468, lat: -60.698 },
+		{ lon: -3.467, lat: -60.702 },
+		{ lon: -3.465, lat: -60.701 },
 	]).unwrap.toNestedArray;
 	const point = Point.create({ lat: -60.701, lon: -3.465 }).unwrap.toArray;
 	console.log({ polygon, point });

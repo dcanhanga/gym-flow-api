@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { AppError } from '@/shared/core/errors/app-error.js';
 import { describe, expect, it, vi } from 'vitest';
-import { RegionValidator } from '../entity-validator.js';
+import { RegionValidator } from '../region.js';
 
 describe('RegionValidator', () => {
 	const sut = RegionValidator;
@@ -13,11 +13,10 @@ describe('RegionValidator', () => {
 		country: 'Test Country',
 		midpoint: { lat: 0, lon: 0 },
 		polygon: [
-			{ lat: 0, lon: 0 },
-			{ lat: 0, lon: 1 },
-			{ lat: 1, lon: 1 },
-			{ lat: 1, lon: 0 },
-			{ lat: 0, lon: 0 },
+			{ lon: -3.465, lat: -60.701 },
+			{ lon: -3.468, lat: -60.698 },
+			{ lon: -3.467, lat: -60.702 },
+			{ lon: -3.465, lat: -60.701 },
 		],
 	};
 
@@ -61,7 +60,7 @@ describe('RegionValidator', () => {
 				});
 
 				expect(result.isFail).toBe(true);
-				expect(result.unwrapError.context).toHaveProperty(
+				expect(result.unwrapError.details).toHaveProperty(
 					'name',
 					'Name cannot be empty',
 				);
@@ -74,7 +73,7 @@ describe('RegionValidator', () => {
 				});
 
 				expect(result.isFail).toBe(true);
-				expect(result.unwrapError.context).toHaveProperty(
+				expect(result.unwrapError.details).toHaveProperty(
 					'country',
 					'Country cannot be empty',
 				);
@@ -87,7 +86,7 @@ describe('RegionValidator', () => {
 				});
 
 				expect(result.isFail).toBe(true);
-				expect(result.unwrapError.context).toHaveProperty('midpoint');
+				expect(result.unwrapError.details).toHaveProperty('midpoint');
 			});
 
 			it('deve falhar quando polígono é inválido', () => {
@@ -101,7 +100,7 @@ describe('RegionValidator', () => {
 				});
 
 				expect(result.isFail).toBe(true);
-				expect(result.unwrapError.context).toHaveProperty('polygon');
+				expect(result.unwrapError.details).toHaveProperty('polygon');
 			});
 
 			it('deve retornar todos os erros de validação quando múltiplos campos são inválidos', () => {
@@ -118,7 +117,7 @@ describe('RegionValidator', () => {
 				const result = sut.validate(invalidInput);
 
 				expect(result.isFail).toBe(true);
-				expect(result.unwrapError.context).toMatchObject({
+				expect(result.unwrapError.details).toMatchObject({
 					id: expect.any(AppError),
 					name: 'Name cannot be empty',
 					country: 'Country cannot be empty',

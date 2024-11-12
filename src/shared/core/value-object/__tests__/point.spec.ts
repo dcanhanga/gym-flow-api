@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { messages } from '@/shared/core/constants/messages.js';
 import { AppError } from '@/shared/core/errors/app-error.js';
-import { Point } from '../value-object/point.js';
+import { Point } from '../point.js';
 
 describe('Point Value Object', () => {
 	const sut = Point;
@@ -13,7 +13,7 @@ describe('Point Value Object', () => {
 
 		expect(result.isFail).toBe(true);
 		expect(result.unwrapError).instanceof(AppError);
-		expect(result.unwrapError.context).toMatchObject({
+		expect(result.unwrapError.details).toMatchObject({
 			details: {
 				latitude: messages.INVALID_LATITUDE_PROVIDED.replace(
 					'value',
@@ -29,7 +29,7 @@ describe('Point Value Object', () => {
 
 		expect(result.isFail).toBe(true);
 		expect(result.unwrapError).instanceof(AppError);
-		expect(result.unwrapError.context).toMatchObject({
+		expect(result.unwrapError.details).toMatchObject({
 			details: {
 				longitude: messages.INVALID_LONGITUDE_PROVIDED.replace(
 					'value',

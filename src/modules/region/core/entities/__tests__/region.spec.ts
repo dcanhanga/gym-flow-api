@@ -1,7 +1,7 @@
 import { httpStatusCode } from '@/shared/core/constants/http-status-code.js';
 import { uuidRegex } from '@/shared/core/utils/regex.js';
 import { describe, expect, it } from 'vitest';
-import { Region } from '../entity.js';
+import { Region } from '../region.js';
 
 describe('Region Entity', () => {
 	const sut = Region;
@@ -9,13 +9,12 @@ describe('Region Entity', () => {
 	const validInput = {
 		name: 'Test Region',
 		country: 'Test Country',
-		midpoint: { lat: 0, lon: 0 },
+		midpoint: { lat: -60.698, lon: -3.468 },
 		polygon: [
-			{ lat: 0, lon: 0 },
-			{ lat: 0, lon: 1 },
-			{ lat: 1, lon: 1 },
-			{ lat: 1, lon: 0 },
-			{ lat: 0, lon: 0 },
+			{ lat: -60.701, lon: -3.465 },
+			{ lat: -60.698, lon: -3.468 },
+			{ lat: -60.702, lon: -3.467 },
+			{ lat: -60.701, lon: -3.465 },
 		],
 	};
 
@@ -40,7 +39,6 @@ describe('Region Entity', () => {
 				[validInput.polygon[0].lat, validInput.polygon[0].lon],
 				[validInput.polygon[1].lat, validInput.polygon[1].lon],
 				[validInput.polygon[2].lat, validInput.polygon[2].lon],
-				[validInput.polygon[3].lat, validInput.polygon[3].lon],
 				[validInput.polygon[0].lat, validInput.polygon[0].lon],
 			]);
 		});
@@ -53,7 +51,6 @@ describe('Region Entity', () => {
 					[validInput.polygon[0].lat, validInput.polygon[0].lon],
 					[validInput.polygon[1].lat, validInput.polygon[1].lon],
 					[validInput.polygon[2].lat, validInput.polygon[2].lon],
-					[validInput.polygon[3].lat, validInput.polygon[3].lon],
 					[validInput.polygon[0].lat, validInput.polygon[0].lon],
 				],
 			]);
@@ -73,7 +70,6 @@ describe('Region Entity', () => {
 						[validInput.polygon[0].lat, validInput.polygon[0].lon],
 						[validInput.polygon[1].lat, validInput.polygon[1].lon],
 						[validInput.polygon[2].lat, validInput.polygon[2].lon],
-						[validInput.polygon[3].lat, validInput.polygon[3].lon],
 						[validInput.polygon[0].lat, validInput.polygon[0].lon],
 					],
 				],
@@ -90,7 +86,7 @@ describe('Region Entity', () => {
 
 			expect(result.isFail).toBe(true);
 			expect(result.unwrapError.statusCode).toBe(httpStatusCode.BAD_REQUEST);
-			expect(result.unwrapError.context).toHaveProperty(
+			expect(result.unwrapError.details).toHaveProperty(
 				'name',
 				'Name cannot be empty',
 			);
@@ -104,7 +100,7 @@ describe('Region Entity', () => {
 
 			expect(result.isFail).toBe(true);
 			expect(result.unwrapError.statusCode).toBe(httpStatusCode.BAD_REQUEST);
-			expect(result.unwrapError.context).toHaveProperty(
+			expect(result.unwrapError.details).toHaveProperty(
 				'country',
 				'Country cannot be empty',
 			);
@@ -118,38 +114,37 @@ describe('Region Entity', () => {
 
 			expect(result.isFail).toBe(true);
 			expect(result.unwrapError.statusCode).toBe(httpStatusCode.BAD_REQUEST);
-			expect(result.unwrapError.context).toHaveProperty('midpoint');
+			expect(result.unwrapError.details).toHaveProperty('midpoint');
 		});
 
 		it('deve falhar quando polígono não é fechado', () => {
 			const result = sut.create({
 				...validInput,
 				polygon: [
-					{ lat: 0, lon: 0 },
-					{ lat: 0, lon: 1 },
-					{ lat: 1, lon: 1 },
-					{ lat: 1, lon: 0 },
-				], // Falta o ponto final igual ao inicial
+					{ lat: -60.701, lon: -3.465 },
+					{ lat: -60.698, lon: -3.468 },
+					{ lat: -60.702, lon: -3.467 },
+				],
 			});
 
 			expect(result.isFail).toBe(true);
 			expect(result.unwrapError.statusCode).toBe(httpStatusCode.BAD_REQUEST);
-			expect(result.unwrapError.context).toHaveProperty('polygon');
+			expect(result.unwrapError.details).toHaveProperty('polygon');
 		});
 
 		it('deve falhar quando polígono tem menos de 4 pontos', () => {
 			const result = sut.create({
 				...validInput,
 				polygon: [
-					{ lat: 0, lon: 0 },
-					{ lat: 0, lon: 1 },
-					{ lat: 1, lon: 1 },
+					{ lat: -60.701, lon: -3.465 },
+					{ lat: -60.698, lon: -3.468 },
+					{ lat: -60.701, lon: -3.465 },
 				],
 			});
 
 			expect(result.isFail).toBe(true);
 			expect(result.unwrapError.statusCode).toBe(httpStatusCode.BAD_REQUEST);
-			expect(result.unwrapError.context).toHaveProperty('polygon');
+			expect(result.unwrapError.details).toHaveProperty('polygon');
 		});
 	});
 });

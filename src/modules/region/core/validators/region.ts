@@ -4,7 +4,7 @@ import { Result } from '@/shared/core/utils/result.js';
 import { Point } from '@/shared/core/value-object/point.js';
 import { Polygon } from '@/shared/core/value-object/polygon.js';
 import { UUID } from '@/shared/core/value-object/uuid.js';
-import type { RegionInput, RegionProps } from './types.js';
+import type { RegionInput, RegionProps } from '../types/region.js';
 
 export class RegionValidator {
 	public static validate(input: RegionInput): Result<RegionProps, AppError> {

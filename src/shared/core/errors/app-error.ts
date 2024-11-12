@@ -1,8 +1,8 @@
-export class AppError extends Error {
+export class AppError<T = unknown> extends Error {
 	constructor(
 		public readonly message: string,
 		public readonly statusCode: number,
-		public readonly context?: Record<string, unknown>,
+		public readonly details?: T,
 	) {
 		super(message);
 		this.name = 'AppError';

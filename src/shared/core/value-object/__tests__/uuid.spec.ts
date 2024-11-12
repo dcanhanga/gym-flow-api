@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { messages } from '@/shared/core/constants/messages.js';
 import { uuidRegex } from '@/shared/core/utils/regex.js';
-import { UUID } from '../value-object/uuid.js';
+import { UUID } from '../uuid.js';
 
 describe('UUID Value Object', () => {
 	const validUUID = '550e8400-e29b-41d4-a716-446655440000';
@@ -43,22 +43,3 @@ describe('UUID Value Object', () => {
 		});
 	});
 });
-
-/*
-{
-  "status": "error",
-  "errors": {
-    "coordinates": [
-      {
-        "path": ["coordinates", 1, "lat"],
-        "message": "Latitude inválida: 100. Deve estar entre -90 e 90."
-      },
-      {
-        "path": ["coordinates", 3, "long"],
-        "message": "Longitude inválida: 200. Deve estar entre -180 e 180."
-      }
-    ]
-  }
-}
-
- */

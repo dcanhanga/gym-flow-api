@@ -9,4 +9,7 @@ export abstract class ValueObject<T> {
 		}
 		return JSON.stringify(this.input) === JSON.stringify(vo.input);
 	}
+	public get getInput(): T {
+		return this.input;
+	}
 }

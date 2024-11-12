@@ -1,13 +1,12 @@
 import { BaseEntity } from '@/shared/core/entity/base-entity.js';
 import type { AppError } from '@/shared/core/errors/app-error.js';
+import type { ValidatorPort } from '@/shared/core/ports/validator.js';
 import { Result } from '@/shared/core/utils/result.js';
-import { RegionValidator } from './entity-validator.js';
-import type { RegionInput, RegionProps } from './types.js';
+import type { RegionInput, RegionProps } from '../types/region.js';
+import { RegionValidator } from '../validators/region.js';
 
 export class Region extends BaseEntity<RegionInput> {
 	private readonly props: RegionProps;
-	private validationErrors: Record<string, unknown> = {};
-
 	private constructor(input: RegionInput, props: RegionProps) {
 		super(input);
 		this.props = props;
@@ -31,8 +30,11 @@ export class Region extends BaseEntity<RegionInput> {
 		return this.props.polygon.toFlatArray;
 	}
 
-	public static create(input: RegionInput): Result<Region, AppError> {
-		const validationResult = RegionValidator.validate(input);
+	public static create(
+		input: RegionInput,
+		validator: ValidatorPort<RegionInput, RegionProps> = RegionValidator,
+	): Result<Region, AppError> {
+		const validationResult = validator.validate(input);
 		if (validationResult.isFail) {
 			return Result.fail(validationResult.unwrapError);
 		}
